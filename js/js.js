@@ -1,26 +1,26 @@
 
-var currentUser;
-//init dictionary of users : key-userName,value-password
-var users = {};
-//add default users
-users["a"] = "a";
-users["test2017"] = "test2017";
-
-
+var _currentUser;
+//init dictionary of _users : key-userName,value-password
+var _users = {};
+//add default _users
+_users["a"] = "a";
+_users["test2017"] = "test2017";
 
 function login() {
     var name = document.getElementById("logName").value;
     var pwd = document.getElementById("logPassword").value;
 
-    if(!(name in users)){
+    if(!(name in _users)){
         alert("User does not exist in the system");
         return;
     }
     else {
-        if (users[name] == pwd) {
-            currentUser = name;
+        if (_users[name] == pwd) {
+            _currentUser = name;
             $("#game").show();
             $("#loginform").hide();
+          //  $("#space").hide();
+          	Start();
 
         }
         else {
@@ -48,7 +48,6 @@ function dialogdown() {
 
 //move between div
 $(document).ready(function () {
-
     /*#region DivFunctions*/
     $('#regDiv').hide();
     $('#loginDiv').hide();
@@ -93,7 +92,7 @@ $(document).ready(function () {
     });
 
     $('#logout').click(function () {
-        currentUser="";
+        _currentUser="";
         $("#game").hide();
         $("#loginform").show();
         document.getElementById("logPassword").value = "";
@@ -116,7 +115,7 @@ $(document).ready(function () {
         }, "containing number.");
 
         $.validator.addMethod("isUserExists", function(user, element, regexpr) {
-            if ((user in users) == false)
+            if ((user in _users) == false)
             {
                 return true; // username is free
             } else {
@@ -209,11 +208,13 @@ $(document).ready(function () {
             },
             submitHandler: function(form) {
                 form.submit();
-                users[form[0].value] = form[1].value;
+                _users[form[0].value] = form[1].value;
             }
         });
     });
     /*#endregion Validation*/
+
+
 });
 
 

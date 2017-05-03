@@ -4,7 +4,9 @@
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
     <link href="https://fonts.googleapis.com/css?family=Shrikhand" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+
 </head>
 <body>
 <header id="header">
@@ -86,7 +88,7 @@
         </div>
     </div>
     <div id="loginDiv">
-        <div style="height:10%"></div>
+        <div id="space" style="height:10%"></div>
         <div id="loginform" class="register">
             <h2 class="sub-header">Login</h2>
             <div class="reg-main">
@@ -105,6 +107,11 @@
         </div>
         <div id="game">
             <button id="logout" class="logout">Logout</button>
+            <input id="lblScore" type="text" />
+            <label>TIME:</label>
+            <input id="lblTime" type="text" />
+            <canvas id="canvas" height="460" width="480"></canvas>
+
         </div>
 
 
@@ -124,8 +131,8 @@
 </footer>
 
 <script type="text/javascript" src="js/js.js"></script>
-<script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
-<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/game.js"></script>
+
 
 
 </body>
