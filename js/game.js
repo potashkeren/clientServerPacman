@@ -15,21 +15,32 @@ keyMap[KEY.ARROW_DOWN]  = DOWN;
 
 var shape=new Object();
 var _board =  [
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-             	[0, 4, 4, 4, 4, 4, 4, 4, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4, 0],
-             	[0, 4, 0, 0, 4, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 4, 0],
-             	[0, 4, 0, 0, 4, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-             	[0, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-             	[0, 4, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-             	[0, 4, 4, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-             	[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-             	[4, 4, 4, 0, 4, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 2],
-             	[0, 0, 0, 0, 4, 0, 4, 0, 0, 3, 0, 0, 1, 0, 1, 0, 0, 0, 0],
-             	[4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 0, 1, 4, 4, 4, 4, 4, 4],
-             	[0, 0, 0, 0, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-             	[4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4]];
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+              	[1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+              	[1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+              	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1],
+              	[1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+              	[1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 2, 2, 1],
+              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 3, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+              	[1, 1, 1, 1, 1, 1, 1, 0, 3, 3, 3, 0, 1, 1, 1, 2, 2, 2, 1],
+              	[2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2],
+              	[2, 1, 1, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 0, 0, 2],
+              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+              	[1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+              	[1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+              	[1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+              	[1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1],
+              	[1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+              ];
 var score;
-var pac_color;
+var pac_color = "yellow";
 var start_time;
 var time_elapsed;
 var interval;
@@ -49,7 +60,9 @@ COUNTDOWN   = 8,
 EATEN_PAUSE = 9,
 DYING       = 10,
 Pacman      = {};
-var context = canvas.getContext("2d");
+var contex = canvas.getContext("2d");
+
+pacman = {x : 50, y : 30, radius : 10, speed : 4, currentDirection : 37, previousDirection : 37, nextDirection: 0, startingX : 50, startingY : 30};
 
 function Start() {
                 //_board = new Array();
@@ -60,8 +73,8 @@ function Start() {
                 var pacman_remain = 1;
                 start_time= new Date();
 
-                shape.i=1;
-                shape.j=5;
+                shape.i=3;
+                shape.j=2;
 
                 while(food_remain>0){
                     var emptyCell = findRandomEmptyCell(_board);
@@ -79,41 +92,24 @@ function Start() {
             }
 
 function Draw() {
-    canvas.width=canvas.width; //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
-    for (var i = 0; i < 13; i++) {
-        for (var j = 0; j < 19; j++) {
-            var center = new Object();
-            center.x = i * 60 + 30;
-            center.y = j * 60 + 30;
-            if (_board[i][j] == 2) {
-                context.beginPath();
-                context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
-                context.lineTo(center.x, center.y);
-                context.fillStyle = pac_color; //color
-                context.fill();
-                context.beginPath();
-                context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
-                context.fillStyle = "black"; //color
-                context.fill();
-            } else if (_board[i][j] == 1) {
-                context.beginPath();
-                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-                context.fillStyle = "white"; //color
-                context.fill();
-            }
-            else if (_board[i][j] == 4) {
-                context.beginPath();
-                context.rect(center.x-30, center.y-30, 60, 60);
-                context.fillStyle = "grey"; //color
-                context.fill();
-            }
-        }
-    }
+    var center = new Object();
+    center.x = shape.i * 30 + 15;
+    center.y = shape.j * 30 + 15;
 
+    contex.beginPath();
+    contex.arc(center.x, center.y, 15, 0.15 * Math.PI, 1.25 * Math.PI); // half circle
+    contex.lineTo(center.x, center.y);
+    contex.fillStyle = pac_color; //color
+    contex.fill();
+    contex.beginPath();
+    contex.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+    contex.fillStyle = "black"; //color
+    contex.fill();
 
 }
+
 
 function keyPress(e) {
     if (state !== WAITING && state !== PAUSE) {
@@ -158,38 +154,33 @@ function GetKeyPressed() {
     }
 }
 
-
-
-
-
-
 function UpdatePosition() {
     _board[shape.i][shape.j]=0;
     var x = GetKeyPressed()
     if(x==1)
     {
-        if(shape.j>0 && _board[shape.i][shape.j-1]!=4)
+        if(shape.j>0 && _board[shape.i][shape.j-1]!=1)
         {
             shape.j--;
         }
     }
     if(x==2)
     {
-        if(shape.j<19 && _board[shape.i][shape.j+1]!=4)
+        if(shape.j<19 && _board[shape.i][shape.j+1]!=1)
         {
             shape.j++;
         }
     }
     if(x==3)
     {
-        if(shape.i>0 && _board[shape.i-1][shape.j]!=4)
+        if(shape.i>0 && _board[shape.i-1][shape.j]!=1)
         {
             shape.i--;
         }
     }
     if(x==4)
     {
-        if(shape.i<13 && _board[shape.i+1][shape.j]!=4)
+        if(shape.i<23 && _board[shape.i+1][shape.j]!=1)
         {
             shape.i++;
         }
@@ -201,10 +192,6 @@ function UpdatePosition() {
     _board[shape.i][shape.j]=2;
     var currentTime=new Date();
     time_elapsed=(currentTime-start_time)/1000;
-    if(score>=20&&time_elapsed<=10)
-    {
-        pac_color="green";
-    }
     if(score==50)
     {
         window.clearInterval(interval);
@@ -212,24 +199,24 @@ function UpdatePosition() {
     }
     else
     {
-        DrawBoard();
-        //Draw();
-
-    }
+            DrawBoard();
+            Draw();
+     }
 }
 
 function DrawBoard(){
+contex.clearRect(0, 0, canvas.width, canvas.height);
  for (var row = 0; row < _board.length; row = row + 1)
     {
         for (var col=0; col < _board[row].length; col = col + 1)
         {
             if(_board[row][col]==1)
             {
-                context.fillStyle="darkBlue";
-                context.fillRect(col*20,row*20,20,20);
+                contex.fillStyle="darkBlue";
+                contex.fillRect(col*20,row*20,20,20);
             } else {
-                context.fillStyle="black";
-                context.fillRect(col*20,row*20,20,20);
+                contex.fillStyle="black";
+                contex.fillRect(col*20,row*20,20,20);
             }
         }
     }
