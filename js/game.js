@@ -79,7 +79,7 @@ function Start() {
                 _board[emptyCell[0]][emptyCell[1]] = 2;
                 //food_remain--;
                 shape.i = emptyCell[0];
-                shape.j = [emptyCell[1];
+                shape.j = emptyCell[1];
                 keysDown = {};
                 addEventListener("keydown", function (e) {
                     keysDown[e.keyCode] = true;
