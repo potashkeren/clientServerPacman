@@ -265,7 +265,7 @@
 
 .reg-main input[type="submit"] {
     padding: 10px 40px;
-    margin: 19px;
+    margin: 4px 0px 10px 1px;
     color: white;
     background: #040124;
     border: none;
@@ -340,7 +340,7 @@ footer{
 }
 .error{
     font-size: 15px;
-    color: white;
+    color: yellow;
     display: inline-block;
     font-family: David;
 }
