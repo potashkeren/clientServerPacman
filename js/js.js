@@ -17,9 +17,10 @@ function login() {
     else {
         if (_users[name] == pwd) {
             _currentUser = name;
+          //  $("#loginform").hide();
+            $("#loginDiv").hide();
             $("#game").show();
-            $("#loginform").hide();
-          //  $("#space").hide();
+          // $("#space").hide();
           	Start();
 
         }
@@ -94,7 +95,7 @@ $(document).ready(function () {
     $('#logout').click(function () {
         _currentUser="";
         $("#game").hide();
-        $("#loginform").show();
+        $("#loginDiv").show();
         document.getElementById("logPassword").value = "";
         document.getElementById("logName").value = "";
     })

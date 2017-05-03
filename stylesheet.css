@@ -140,6 +140,14 @@
     background-image: url("img/bg3.gif");
     background-size: cover;
 }
+
+#game{
+    width:100%;
+    height:100%;
+    text-align: center;
+    background-image: url("img/bg3.gif");
+    background-size: cover;
+}
 .submit{
     padding: 10px 40px;
     margin: 19px;
@@ -167,8 +175,7 @@
     font-size: 25px;;
     letter-spacing: 3px;
     display: block;
-    -webkit-margin-before: 0.83em;
-    -webkit-margin-after: 0.83em;
+    float: left;
     -webkit-margin-start: 0px;
     -webkit-margin-end: 0px;
     font-weight: bold;
@@ -231,17 +238,13 @@
 
 #canvas{
     position: relative;
-    margin: 0;
-    padding: 0;
-    border: 0;
     vertical-align: baseline;
-    height: 40%;
+    height: 80%;
     width: 50%;
-    display: inline-block;
-    vertical-align: baseline;display: block;
-    margin-left: 25%;
-    margin-right: 25%;
-    background: black;
+    padding: 3%;
+    display: block;
+    margin-left: 30%;
+     margin-right: 25%
 }
 .register{
     margin: 2% auto;
