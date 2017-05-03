@@ -179,13 +179,33 @@ $(document).ready(function () {
                     required: "Please enter a Email"
                 },
                 birthday:{
-
+                    required: "Please enter a Birthday"
                 }
             },
             errorElement: 'div',
             errorPlacement: function(error, element) {
-                 error.appendTo('#errordiv');
-
+                switch (element.attr("name")) {
+                    case 'user_name':
+                        error.insertAfter($("#errordiv1"));
+                        break;
+                    case 'password':
+                        error.insertAfter($("#errordiv2"));
+                        break;
+                    case 'fr_name':
+                        error.insertAfter($("#errordiv3"));
+                        break;
+                    case 'ls_name':
+                        error.insertAfter($("#errordiv4"));
+                        break;
+                    case 'email':
+                        error.insertAfter($("#errordiv5"));
+                        break;
+                    case 'birthday':
+                        error.insertAfter($("#errordiv6"));
+                        break;
+                    default:
+                        error.insertAfter(element);
+                }
             },
             submitHandler: function(form) {
                 form.submit();
