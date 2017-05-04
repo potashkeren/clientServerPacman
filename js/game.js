@@ -16,41 +16,35 @@ keyMap[KEY.ARROW_UP]    = UP;
 keyMap[KEY.ARROW_RIGHT] = RIGHT;
 keyMap[KEY.ARROW_DOWN]  = DOWN;
 
-var ghostsPictures =["./img/pinkGhost.gif", "./img/redGhost.png", "./img/turkizGhost.png"];
-var Ghost = {
-    var position  = null,
-        direction = null,
-        eatable   = null,
-        eaten     = null,
+var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
-}
 var shape=new Object();
 
 var _lastPressedKey;
 
 var _board =  [
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+              	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
               	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-              	[1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1],
-              	[1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1],
-              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[2, 2, 2, 2, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1],
-              	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1],
-              	[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-              	[1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1],
-              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
-              	[1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
-              	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+              	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+              	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+              	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+              	[1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+              	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+              	[1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+              	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+              	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+              	[1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+              	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+              	[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
               ];
 var score;
@@ -95,6 +89,7 @@ function Start() {
                 _board[emptyCell[0]][emptyCell[1]] = 3; // 3==coin
                 food_remain--;
                }
+               createGhosts();
 
 
                 keysDown = {};
@@ -104,12 +99,11 @@ function Start() {
                 addEventListener("keyup", function (e) {
                     keysDown[e.keyCode] = false;
                 }, false);
-                 interval=setInterval(UpdatePosition, 70);
+                 interval=setInterval(UpdatePosition, 80);
             }
 
 
-function createGhosts()
-{
+function createGhosts(){
     for (var i = 0; i < numOfGhosts; i++)
     {
         if (ghosts[i] == null)
@@ -117,7 +111,6 @@ function createGhosts()
             var ghost = {x : corners[i+1].x, y : corners[i+1].y, radius : 10 , color: 'white', direction : 37, speed : 4, startingX : corners[i+1].x, startingY : corners[i+1].y};
 
             ghost.imagePath = ghostsPictures[i];
-            ghost.grid = copyArr(grid);
             ghost.isAlive = true;
 
             var position = {x : -1, y : -1};
@@ -129,9 +122,8 @@ function createGhosts()
         }
     }
 }
-
-function printGhosts(){
-    for(var i = 0; i < numOfGhost; i++)
+function DrawGhosts(){
+    for(var i = 0; i < numOfGhosts; i++)
     {
         var ghost = ghosts[i];
          // regular mode, no eat ghost mode
@@ -139,7 +131,7 @@ function printGhosts(){
             imageObj.width = "20px";
             imageObj.height = "20px";
             imageObj.src = ghost.imagePath;
-            ctx.drawImage(imageObj, ghost.x - ghost.radius, ghost.y -ghost.radius , 20, 20);
+            contex.drawImage(imageObj, ghost.x - ghost.radius, ghost.y -ghost.radius , 20, 20);
     }
 }
 function DrawPacman() {
@@ -205,7 +197,38 @@ function DrawPacman() {
                 contex.fill();
             }
 }
+function moveGhosts(){
+    for (var i = 0; i < numOfGhosts; i++)
+    {
+            var g = ghosts[i];
+            var ghost = {x : corners[i+1].x, y : corners[i+1].y,
+                         radius : 10 , color: 'white', direction : 37, speed : 4,
+                         startingX : corners[i+1].x, startingY : corners[i+1].y};
+            var bestMove;
+            var locations = getPossibleGhostMoves(ghost.x, ghost.y);
+            ghosts.push(ghost);
+    }
+}
 
+function getPossibleGhostMoves( x,  y){
+        var locations = [];
+        if(_board[x-1][y] ==0){
+             var place = {x: x-1, y: y};
+            locations.push(place);
+        }
+        if(_board[x+1][y] ==0){
+             var place = {x: x+1, y: y};
+            locations.push(place);
+        }
+        if(_board[x][y-1] ==0){
+             var place = {x: x, y: y-1};
+            locations.push(place);
+        } if(_board[x][y+1] ==0){
+             var place = {x: x, y: y+1};
+             locations.push(place);
+        }
+    return locations;
+}
 function keyDown(e) {
 if (typeof keyMap[e.keyCode] !== "undefined") {
     due = keyMap[e.keyCode];
@@ -226,6 +249,20 @@ return true;
     }
     return [i,j];
  }
+
+function getRandomDirection(){
+    var i = Math.random();
+    if(i<0.25){
+        return "up";
+    }else if(i<0.5){
+        return "down";
+    }else if(i<0.75){
+        return "right";
+    }else{
+        return "left";
+    }
+
+}
 
 function GetKeyPressed() {
     if (keysDown[38]) {
@@ -293,8 +330,8 @@ function UpdatePosition() {
     {
             DrawBoard();
             DrawPacman();
-            //pacman.draw();
             DrawPoints();
+            DrawGhosts();
      }
 }
 
