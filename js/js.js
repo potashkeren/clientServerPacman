@@ -20,7 +20,8 @@ function login() {
           //  $("#loginform").hide();
             $("#loginDiv").hide();
             $("#game").show();
-          // $("#space").hide();
+            $("#settings").show();
+           $("#play").hide();
           	Start();
 
         }

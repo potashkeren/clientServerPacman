@@ -364,6 +364,53 @@ footer{
 }
 
 
+.styled-select {
+   height: 29px;
+   overflow: hidden;
+   width: 6%;
+   margin-left: 47%;
+   margin-right: 47%;
+   margin-bottom:2%;
+}
+.styled-select select {
+   background: transparent;
+   border: none;
+   font-size: 14px;
+   height: 29px;
+   padding: 5px;
+}
+.styled-select.slate {
+   background: url(http://i62.tinypic.com/2e3ybe1.jpg) no-repeat right center;
+   height: 34px;
+   width: 240px;
+}
+.styled-select.slate select {
+   border: 1px solid #ccc;
+   font-size: 16px;
+   height: 34px;
+   width: 268px;
+}
+.yellow  { background-color: #eec111; }
+.rounded {
+   -webkit-border-radius: 20px;
+   -moz-border-radius: 20px;
+   border-radius: 20px;
+}
+.yellow select  { color: #000; }
+
+.setting_header{
+    font-size: 20px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    color: white;
+    letter-spacing: 3px;
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'Shrikhand', cursive;
+     }
+
 
 
 
