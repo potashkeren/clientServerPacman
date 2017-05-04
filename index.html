@@ -113,22 +113,21 @@
         <input id="lblScore" type="text" />
         <label>TIME:</label>
         <input id="lblTime" type="text" />
-        <canvas id="canvas" height="460" width="480"></canvas>
+        <canvas id="canvas" height="460" width="460"></canvas>
         </div>
         <div id="settings">
             <div style="height:20%"></div>
             <p class="setting_header">Num of ghosts: </p>
             <div class="styled-select yellow rounded">
-                <select>
+                <select id="selectGhosts">
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
-                    <option>4</option>
                 </select>
             </div>
             <p class="setting_header">Num of coins:</p>
             <div class="styled-select yellow rounded">
-                <select>
+                <select id="selectCoins">
                     <option>50</option>
                     <option>55</option>
                     <option>60</option>
@@ -142,13 +141,17 @@
             </div>
             <p class="setting_header">Time:</p>
             <div class="styled-select yellow rounded">
-                <select>
-                    <option>60s'</option>
-                    <option>70</option>
-                    <option>80</option>
-                    <option>90</option>
+                <select id="selectTime">
+                    <option>60 sec</option>
+                    <option>90 sec</option>
+                    <option>120 sec</option>
+                    <option>150 sec</option>
+                    <option>180 sec</option>
+                    <option>210 sec</option>
+                    <option>240 sec</option>
                 </select>
             </div>
+            <button onclick="playGame()">PLAY GAME</button>
         </div>
     </div>
     <dialog id="Dialog" >

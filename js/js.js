@@ -5,7 +5,7 @@ var _users = {};
 //add default _users
 _users["a"] = "a";
 _users["test2017"] = "test2017";
-
+var ghosts, time,coins;
 function login() {
     var name = document.getElementById("logName").value;
     var pwd = document.getElementById("logPassword").value;
@@ -22,8 +22,6 @@ function login() {
             $("#game").show();
             $("#settings").show();
            $("#play").hide();
-          	Start();
-
         }
         else {
             alert("Wrong password, Please try again");
@@ -32,6 +30,15 @@ function login() {
     }
 }
 
+function playGame(){
+    ghosts = $("#selectGhosts").val();
+    time = $("#selectTime").val();
+    coins = $("#selectCoins").val();
+    $("#settings").hide();
+    $("#play").show();
+    Start();
+
+}
 /*#region Menu&Dialog*/
 // menu function
 function openNav() {
