@@ -5,7 +5,7 @@ var _users = {};
 //add default _users
 _users["a"] = "a";
 _users["test2017"] = "test2017";
-var ghosts, time,coins;
+var numOfGhosts, time,coins;
 function login() {
     var name = document.getElementById("logName").value;
     var pwd = document.getElementById("logPassword").value;
@@ -31,7 +31,7 @@ function login() {
 }
 
 function playGame(){
-    ghosts = $("#selectGhosts").val();
+    numOfGhosts = $("#selectGhosts").val();
     time = $("#selectTime").val();
     coins = $("#selectCoins").val();
     $("#settings").hide();

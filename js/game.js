@@ -1,7 +1,7 @@
 /* Human readable keyCode index */
 var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
 
- var position  = null,
+var position  = null,
         direction = null,
         eaten     = null,
         due       = null,
@@ -9,22 +9,21 @@ var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 
         score     = 5,
         keyMap    = {};
 
+        var ghosts = [];
+var corners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }, { x: 30 , y : 430}];
 keyMap[KEY.ARROW_LEFT]  = LEFT;
 keyMap[KEY.ARROW_UP]    = UP;
 keyMap[KEY.ARROW_RIGHT] = RIGHT;
 keyMap[KEY.ARROW_DOWN]  = DOWN;
 
-window.requestAnimationFrame = (function () {
-  return window.requestAnimationFrame ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame ||
-          window.oRequestAnimationFrame ||
-          window.msRequestAnimationFrame ||
-          function (callback) {
-            window.setTimeout(callback, 1000 / 60);
-          };
-})();
+var ghostsPictures =["./img/pinkGhost.gif", "./img/redGhost.png", "./img/turkizGhost.png"];
+var Ghost = {
+    var position  = null,
+        direction = null,
+        eatable   = null,
+        eaten     = null,
 
+}
 var shape=new Object();
 
 var _lastPressedKey;
@@ -38,9 +37,9 @@ var _board =  [
               	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1],
               	[1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1],
               	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1],
+              	[2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1],
               	[1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-              	[1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1],
+              	[2, 2, 2, 2, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1],
               	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
               	[1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
               	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
@@ -48,7 +47,7 @@ var _board =  [
               	[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1],
               	[1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1],
               	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-              	[1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1],
+              	[1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1],
               	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1],
               	[1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
               	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -108,6 +107,41 @@ function Start() {
                  interval=setInterval(UpdatePosition, 70);
             }
 
+
+function createGhosts()
+{
+    for (var i = 0; i < numOfGhosts; i++)
+    {
+        if (ghosts[i] == null)
+        {
+            var ghost = {x : corners[i+1].x, y : corners[i+1].y, radius : 10 , color: 'white', direction : 37, speed : 4, startingX : corners[i+1].x, startingY : corners[i+1].y};
+
+            ghost.imagePath = ghostsPictures[i];
+            ghost.grid = copyArr(grid);
+            ghost.isAlive = true;
+
+            var position = {x : -1, y : -1};
+            ghost.oldStart = position; // for a star alghorithm
+            var position = {x : -1, y : -1};
+            ghost.oldGoal = position; // for a star alghorithm
+
+            ghosts.push(ghost)
+        }
+    }
+}
+
+function printGhosts(){
+    for(var i = 0; i < numOfGhost; i++)
+    {
+        var ghost = ghosts[i];
+         // regular mode, no eat ghost mode
+            var imageObj = new Image();
+            imageObj.width = "20px";
+            imageObj.height = "20px";
+            imageObj.src = ghost.imagePath;
+            ctx.drawImage(imageObj, ghost.x - ghost.radius, ghost.y -ghost.radius , 20, 20);
+    }
+}
 function DrawPacman() {
     lblScore.value = score;
     lblTime.value = time_elapsed;
@@ -129,49 +163,47 @@ function DrawPacman() {
             contex.fillStyle = "black"; //color
             contex.fill();
 
-    } else if(_lastPressedKey == "right"){
-            //pacman
-            contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.15 * Math.PI, 1.85 * Math.PI, false); // half circle
-            contex.lineTo(center.x, center.y);
-            contex.fillStyle = "yellow"; //color
-            contex.fill();
+    } else if(_lastPressedKey == "up"){
+               //pacman
+                contex.beginPath();
+                contex.arc(center.x, center.y, 10, 1.4 * Math.PI, 1.65 * Math.PI, true); // half circle
+                contex.lineTo(center.x, center.y);
+                contex.fillStyle = "yellow"; //color
+                contex.fill();
 
-            //eye
-            contex.beginPath();
-            contex.arc(center.x + 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
-            contex.fillStyle = "black"; //color
-            contex.fill();
+                //eye
+                contex.beginPath();
+                contex.arc(center.x + 3.6666 , center.y - 2 ,  1.5, 0, 2 * Math.PI, false); // circle
+                contex.fillStyle = "black"; //color
+                contex.fill();
+
     } else if(_lastPressedKey == "down"){
             //pacman
             contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.6 * Math.PI, 0.85 * Math.PI, true); // half circle
+            contex.arc(center.x, center.y, 10, 0.4 * Math.PI, 0.65 * Math.PI, true); // half circle
             contex.lineTo(center.x, center.y);
             contex.fillStyle = "yellow"; //color
             contex.fill();
 
             //eye
             contex.beginPath();
-            contex.arc(center.x + 1.6666 , center.y + 5 ,  1.5, 0, 2 * Math.PI, true); // circle
+            contex.arc(center.x + 3.6666 , center.y + 2 ,  1.5, 0, 2 * Math.PI, true); // circle
             contex.fillStyle = "black"; //color
             contex.fill();
     }else {
-            //pacman
-            contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.15 * Math.PI, 1.85 * Math.PI, false); // half circle
-            contex.lineTo(center.x, center.y);
-            contex.fillStyle = "yellow"; //color
-            contex.fill();
+                //pacman
+                contex.beginPath();
+                contex.arc(center.x, center.y, 10, 0.15 * Math.PI, 1.85 * Math.PI, false); // half circle
+                contex.lineTo(center.x, center.y);
+                contex.fillStyle = "yellow"; //color
+                contex.fill();
 
-            //eye
-            contex.beginPath();
-            contex.arc(center.x - 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
-            contex.fillStyle = "black"; //color
-            contex.fill();
-    }
-
-
-
+                //eye
+                contex.beginPath();
+                contex.arc(center.x + 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
+                contex.fillStyle = "black"; //color
+                contex.fill();
+            }
 }
 
 function keyDown(e) {
