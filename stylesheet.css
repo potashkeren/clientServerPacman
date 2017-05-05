@@ -238,14 +238,14 @@
 }
 
 #canvas{
-    position: relative;
+    position: absolute;
     vertical-align: baseline;
     height: 80%;
     width: 50%;
     padding: 0 3% 3% 3%;
     display: block;
-    margin-left: 25%;
-     margin-right: 30%
+    margin-left: 20%;
+     margin-right: 25%
 }
 .register{
     margin: 2% auto;
@@ -409,14 +409,28 @@ footer{
     font-family: 'Shrikhand', cursive;
      }
 
- #welcome_user{
+#welcome_user{
  color:white;
- font-size: 18px;
+ font-size: 20px;
  font-family: 'Shrikhand', cursive;
  margin:0;
- padding-right:50%;
+ padding-right:51%;
  padding-top:5%;
+ letter-spacing: 3px;
  }
+
+#user_board{
+    margin: 1% 2% ;
+    background: rgba(22, 18, 31, 0.52);
+    width: 15%;
+    font-family: 'Shrikhand', cursive;
+    border-radius: 10%;
+    float:right;
+}
+.label_Board{
+    font-size: 20px;
+}
+
 
 
 
