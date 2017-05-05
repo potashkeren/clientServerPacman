@@ -91,8 +91,6 @@ var contex = canvas.getContext("2d");
 function Start() {
                 score = 0;
                 var cnt = 100;
-
-
                 start_time= new Date();
 
                 ///place the pacman in randome cell
@@ -208,8 +206,6 @@ function DrawGhosts(){
 }
 
 function DrawPacman() {
-    lblScore.value = score;
-    lblTime.value = time_elapsed;
     var center = new Object();
     center.x = shape.i*20 + 10;// * 50 + 30;
     center.y = shape.j*20 + 10;// * 50 + 30;
@@ -375,6 +371,7 @@ function GetKeyPressed() {
 }
 
 function UpdatePosition() {
+    $("#lblScore").text(score);
     _board[shape.i][shape.j]=0;
     var x = GetKeyPressed()
     if(x==1)
@@ -446,7 +443,7 @@ function UpdatePosition() {
 }
 
 function checkPacmanStartMeet(){
-    if(starFish.x == shape.i && starFish.y == shape.j){
+    if( starFish.isAlive && starFish.x == shape.i && starFish.y == shape.j){
        score = score + 50;
        starFish.isAlive = false;
 
