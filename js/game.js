@@ -18,6 +18,7 @@ keyMap[KEY.ARROW_RIGHT] = RIGHT;
 keyMap[KEY.ARROW_DOWN]  = DOWN;
 
 var _ghostMoveModolu = 0;
+var eatenCoins =0;
 
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
@@ -118,13 +119,12 @@ function fillPoints(){
             _board[emptyCell[0]][emptyCell[1]] = 4;
             pinkPoints--;
         } else if(orangePoints >0){
-                _board[emptyCell[0]][emptyCell[1]] = 5;
-                orangePoints--;
+            _board[emptyCell[0]][emptyCell[1]] = 5;
+            orangePoints--;
         }
         food_remain--;
    }
 }
-
 function createGhosts(){
     for (var i = 0; i < numOfGhosts; i++)
     {
@@ -140,7 +140,6 @@ function createGhosts(){
         }
     }
 }
-
 function DrawGhosts(){
     for(var i = 0; i < numOfGhosts; i++)
     {
@@ -353,22 +352,25 @@ function UpdatePosition() {
             _lastPressedKey = "right";
         }
     }
-        if(_board[shape.i][shape.j]==3)
-       {
-           score = score+5;
-       }
-       if(_board[shape.i][shape.j]==4)
+    if(_board[shape.i][shape.j]==3)
+    {
+       score = score+5;
+       eatenCoins++;
+    }
+    else if(_board[shape.i][shape.j]==4)
       {
            score = score + 15;
+           eatenCoins++;
       }
-      if(_board[shape.i][shape.j]==5)
+      else if(_board[shape.i][shape.j]==5)
      {
            score = score + 25;
+           eatenCoins++;
      }
-_board[shape.i][shape.j]=2;
+    _board[shape.i][shape.j]=2;
     var currentTime=new Date();
     time_elapsed=(currentTime-start_time)/1000;
-    if(score==coins)
+    if(eatenCoins==coins)
     {
         window.clearInterval(interval);
         window.alert("Game completed");
