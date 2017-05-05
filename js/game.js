@@ -20,19 +20,10 @@ var ghosts = [];
 var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }];
 var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }];
 
-var starFish = {
-        x: 1,
-        y : 21,
-        prevX: 1,
-        prevY: 21,
-        boardX: 30 ,
-        boardY: 430,
-        img: "./img/starfish.png",
-        isAlive: true,
-}
+var starFish;
 
 var _ghostMoveModolu = 0;
-var eatenCoins =0;
+var _eatenCoins =0;
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
 var shape=new Object();
@@ -76,8 +67,6 @@ function Start() {
                 shape.j = emptyCell[1];
 
                fillPoints();
-
-
                createGhosts();
 
 
@@ -122,6 +111,16 @@ function initBoard(){
                          	[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                          ];
+  starFish = {
+                    x: 1,
+                    y : 21,
+                    prevX: 1,
+                    prevY: 21,
+                    boardX: 30 ,
+                    boardY: 430,
+                    img: "./img/starfish.png",
+                    isAlive: true,
+            };
 }
 
 function moveStarfish(){
@@ -186,6 +185,9 @@ function fillPoints(){
         }
         food_remain--;
    }
+   var emptyCell = findRandomEmptyCell(_board);
+    _board[emptyCell[0]][emptyCell[1]] = 8; // Extra Time
+
 }
 
 function createGhosts(){
@@ -412,23 +414,10 @@ function UpdatePosition() {
             _lastPressedKey = "right";
         }
     }
-    if(_board[shape.i][shape.j]==3)
-    {
-       score = score+5;
-       eatenCoins++;
-    }
-    else if(_board[shape.i][shape.j]==4)
-      {
-           score = score + 15;
-           eatenCoins++;
-      }
-      else if(_board[shape.i][shape.j]==5)
-     {
-           score = score + 25;
-           eatenCoins++;
-     }
+    checkScores();
+
     _board[shape.i][shape.j]=2;
-    if(eatenCoins==coins)
+    if(_eatenCoins==coins)
     {
         gameOver("coins");
     }
@@ -444,6 +433,27 @@ function UpdatePosition() {
             moveGhosts();
             moveStarfish();
      }
+}
+
+function checkScores(){
+    if(_board[shape.i][shape.j]==3)
+    {
+       score = score+5;
+       _eatenCoins++;
+    }
+    else if(_board[shape.i][shape.j]==4)
+      {
+           score = score + 15;
+           _eatenCoins++;
+      }
+      else if(_board[shape.i][shape.j]==5)
+     {
+           score = score + 25;
+           _eatenCoins++;
+     }
+      else if(_board[shape.i][shape.j]==8){
+            time = time + 30;
+      }
 }
 
 function checkPacmanStartMeet(){
@@ -532,6 +542,14 @@ function DrawPoints(){
                         imageObj.width = "20px";
                         imageObj.height = "20px";
                         imageObj.src = "./img/25.png";
+                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
+
+                }
+               else if(_board[row][col]==8) {
+                       var imageObj = new Image();
+                        imageObj.width = "20px";
+                        imageObj.height = "20px";
+                        imageObj.src = "./img/time.png";
                         contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
 
                 }
