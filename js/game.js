@@ -1,6 +1,7 @@
 /* Human readable keyCode index */
 var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
 
+var counter=setInterval(timer, 1000);
 var position  = null,
         direction = null,
         eaten     = null,
@@ -30,14 +31,8 @@ var starFish = {
         isAlive: true,
 }
 
-keyMap[KEY.ARROW_LEFT]  = LEFT;
-keyMap[KEY.ARROW_UP]    = UP;
-keyMap[KEY.ARROW_RIGHT] = RIGHT;
-keyMap[KEY.ARROW_DOWN]  = DOWN;
-
 var _ghostMoveModolu = 0;
 var eatenCoins =0;
-var counter=setInterval(timer, 1000);
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
 var shape=new Object();
@@ -77,7 +72,6 @@ var interval;
 var state   = WAITING;
 
 /* Human readable keyCode index */
-var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
 var NONE        = 4,
 UP          = 3,
 LEFT        = 2,
@@ -124,14 +118,35 @@ function Start() {
             }
 
 function moveStarfish(){
-        var locations = getPossibleMoves(starFish.x,starFish.y);
-        var rnd = Math.floor((Math.random() * locations.length));
-
-        starFish.x = locations[rnd].x;
-        starFish.y = locations[rnd].y;
+    if(starFish.isAlive)
+    {
+        if( _ghostMoveModolu % 5 == 0){
+            var locations = getPossibleMoves(starFish.x,starFish.y);
+             if(locations.length == 1){
+                starFish.prevX = starFish.x;
+                starFish.prevY = starFish.y;
+                starFish.x =  locations[0].x;
+                starFish.y = locations[0].y;
+             }else{
+             var moved = false;
+             while(!moved){
+                var rnd = Math.floor((Math.random() * locations.length));
+                if((starFish.prevY != locations[rnd].y || starFish.prevX != locations[rnd].x )){
+                        starFish.prevX = starFish.x;
+                        starFish.prevY = starFish.y;
+                        starFish.x = locations[rnd].x;
+                        starFish.y = locations[rnd].y;
+                        moved = true;
+                     }
+                }
+              }
+        }
+     }
 }
 
 function drawStarfish(){
+    if(starFish.isAlive)
+    {
         var locations = getPossibleMoves(starFish.x,starFish.y);
         var rnd = Math.floor((Math.random() * locations.length));
 
@@ -140,6 +155,7 @@ function drawStarfish(){
                    imageObj.height = "20px";
                    imageObj.src = starFish.img;
                    contex.drawImage(imageObj, starFish.x*20+10 - 10, starFish.y*20+10 - 10 , 20, 20);
+     }
 }
 
 function fillPoints(){
@@ -164,6 +180,7 @@ function fillPoints(){
         food_remain--;
    }
 }
+
 function createGhosts(){
     for (var i = 0; i < numOfGhosts; i++)
     {
@@ -173,12 +190,11 @@ function createGhosts(){
              radius: 10,  startingX : canvasCorners[i+1].x, startingY : canvasCorners[i+1].y};
 
             ghost.imagePath = ghostsPictures[i];
-            ghost.isAlive = true;
-
             ghosts.push(ghost)
         }
     }
 }
+
 function DrawGhosts(){
     for(var i = 0; i < numOfGhosts; i++)
     {
@@ -190,6 +206,7 @@ function DrawGhosts(){
             contex.drawImage(imageObj, ghost.x*20+10 - ghost.radius, ghost.y*20+10 -ghost.radius , 20, 20);
     }
 }
+
 function DrawPacman() {
     lblScore.value = score;
     lblTime.value = time_elapsed;
@@ -253,6 +270,7 @@ function DrawPacman() {
                 contex.fill();
             }
 }
+
 function moveGhosts(){
     _ghostMoveModolu = _ghostMoveModolu + 1 ;
 
@@ -315,9 +333,9 @@ if (typeof keyMap[e.keyCode] !== "undefined") {
     return false;
 }
 return true;
-};
+}
 
- function findRandomEmptyCell(_board){
+function findRandomEmptyCell(_board){
     var i = Math.floor((Math.random() * 22) + 1);
     var j = Math.floor((Math.random() * 22) + 1);
     while(_board[i][j]!=0)
@@ -423,8 +441,19 @@ function UpdatePosition() {
             moveGhosts();
             moveStarfish();
             checkPacmanGhostMeet();
+            checkPacmanStartMeet();
      }
 }
+
+function checkPacmanStartMeet(){
+    if(starFish.x == shape.i && starFish.y == shape.j){
+       score = score + 50;
+       starFish.isAlive = false;
+
+    }
+}
+
+
 
 function gameOver(reason){
      window.clearInterval(interval);
@@ -432,7 +461,20 @@ function gameOver(reason){
         window.alert("Game completed");
     } else if(reason == "gameover"){
             window.alert("GAME OVER");
+    } else{
+       window.alert("Else reson");
     }
+}
+
+function timer()
+{
+  time=time-1;
+  if (time == 0)
+  {
+     clearInterval(counter);
+     return;
+  }
+  $("#lblTime").text(time);
 }
 
 function checkPacmanGhostMeet(){
