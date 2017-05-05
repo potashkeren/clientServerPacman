@@ -353,8 +353,23 @@ function UpdatePosition() {
             DrawPoints();
             DrawGhosts();
             moveGhosts();
+            checkPacmanGhostMeet();
      }
 }
+
+function checkPacmanGhostMeet(){
+
+for(var i=0; i<numOfGhosts; i++){
+
+    var ghost = ghosts[i];
+    if(ghost.x == shape.i && ghost.y == shape.j){
+        window.clearInterval(interval);
+        window.alert("GAME OVER");
+    }
+
+}
+}
+
 
 function DrawBoard(){
 contex.clearRect(0, 0, canvas.width, canvas.height);
