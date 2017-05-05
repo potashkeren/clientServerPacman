@@ -35,7 +35,7 @@ function playGame(){
     coins = $("#selectCoins").val();
     $("#settings").hide();
     $("#play").show();
-     $("#welcome_user").text("WELCOME   " + _currentUser);
+     $("#welcome_user").text("WELCOME"  + _currentUser);
     Start();
 
 }
@@ -132,6 +132,13 @@ $(document).ready(function () {
             }
         }, "username already exsists.");
 
+         jQuery.validator.addMethod("password", function (value, element) {
+             return this.optional(element) || /^(?=.*[a-zA-Z])(?=.*\d).*$/.test(value);
+          }, "password should be at least 8 digit and contains letter and numbers");
+
+        jQuery.validator.addMethod("firstLastName", function (value, element) {
+              return this.optional(element) || /^[a-zA-Z]*$/.test(value);
+         }, "Name should contain only letters");
 
         $("form[name='registerForm']").validate({
 
@@ -139,13 +146,12 @@ $(document).ready(function () {
             rules: {
                 user_name: {
                     required : true,
-                    //isUserExists : true
-
+                    //isUserExists : tru
                 },
                 password: {
                     required : true,
                     regex: true,
-                   // minlength: 8
+                    minlength: 8,
                 },
                 fr_name: {
                     required: true,
@@ -172,7 +178,7 @@ $(document).ready(function () {
                 },
                 password: {
                     required: "Please enter a Password",
-                    //minlength: "Password must contain at least 8 characters",
+                    minlength: "Password must contain at least 8 characters",
                     //regex: "password should contain at least 1 letter and 1 digit",
                 },
                 fr_name: {

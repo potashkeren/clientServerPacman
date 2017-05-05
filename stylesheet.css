@@ -176,7 +176,7 @@
     font-size: 25px;;
     letter-spacing: 3px;
     display: block;
-    float: left;
+    float: right;
     -webkit-margin-start: 0px;
     -webkit-margin-end: 0px;
     font-weight: bold;
@@ -185,8 +185,8 @@
     color: #ff7885;
     background-color: #f1f1f1;
     padding: 10px 20px 10px 20px;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
     font-family: 'Shrikhand', cursive;
 }
 
