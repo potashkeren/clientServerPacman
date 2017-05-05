@@ -37,7 +37,7 @@ var _board =  [
               	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
               	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
               	[1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+              	[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
               	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
               	[1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
               	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
@@ -76,7 +76,7 @@ var contex = canvas.getContext("2d");
 function Start() {
                 score = 0;
                 var cnt = 100;
-                var food_remain = coins;
+
                 var pacman_remain = 1;
                 start_time= new Date();
 
@@ -86,11 +86,8 @@ function Start() {
                 shape.i = emptyCell[0];
                 shape.j = emptyCell[1];
 
-               while(food_remain>0){
-                var emptyCell = findRandomEmptyCell(_board);
-                _board[emptyCell[0]][emptyCell[1]] = 3; // 3==coin
-                food_remain--;
-               }
+               fillPoints();
+
 
                createGhosts();
 
@@ -105,6 +102,28 @@ function Start() {
                  interval=setInterval(UpdatePosition, 80);
             }
 
+function fillPoints(){
+   //fill Points
+   var food_remain = coins;
+   var whitePoints = 0.6 * coins;
+   var pinkPoints = 0.3 * coins;
+   var orangePoints = coins - pinkPoints - whitePoints;
+
+   while(food_remain>0){
+        var emptyCell = findRandomEmptyCell(_board);
+        if(whitePoints > 0){
+            _board[emptyCell[0]][emptyCell[1]] = 3; // 3==white coin
+            whitePoints--;
+        } else if(pinkPoints>0){
+            _board[emptyCell[0]][emptyCell[1]] = 4;
+            pinkPoints--;
+        } else if(orangePoints >0){
+                _board[emptyCell[0]][emptyCell[1]] = 5;
+                orangePoints--;
+        }
+        food_remain--;
+   }
+}
 
 function createGhosts(){
     for (var i = 0; i < numOfGhosts; i++)
@@ -334,11 +353,19 @@ function UpdatePosition() {
             _lastPressedKey = "right";
         }
     }
-    if(_board[shape.i][shape.j]==3)
-   {
-       score++;
-   }
-    _board[shape.i][shape.j]=2;
+        if(_board[shape.i][shape.j]==3)
+       {
+           score = score+5;
+       }
+       if(_board[shape.i][shape.j]==4)
+      {
+           score = score + 15;
+      }
+      if(_board[shape.i][shape.j]==5)
+     {
+           score = score + 25;
+     }
+_board[shape.i][shape.j]=2;
     var currentTime=new Date();
     time_elapsed=(currentTime-start_time)/1000;
     if(score==coins)
@@ -370,7 +397,6 @@ for(var i=0; i<numOfGhosts; i++){
 }
 }
 
-
 function DrawBoard(){
 contex.clearRect(0, 0, canvas.width, canvas.height);
  for (var row = 0; row < _board.length; row++)
@@ -395,13 +421,29 @@ function DrawPoints(){
         for (var col=0; col < _board[row].length; col++)
         {
             if(_board[row][col]==3) {
-                contex.beginPath();
-                contex.arc(row*20 + 10, col*20+10, 5, 0, 2 * Math.PI);
-                contex.lineTo(row*20 + 10, col*20+10);
-                contex.fillStyle = "white"; //color
-                contex.fill();
 
+             var imageObj = new Image();
+                        imageObj.width = "20px";
+                        imageObj.height = "20px";
+                        imageObj.src = "./img/5.png";
+                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
             }
+             else if(_board[row][col]==4) {
+                      var imageObj = new Image();
+                        imageObj.width = "20px";
+                        imageObj.height = "20px";
+                        imageObj.src = "./img/15.png";
+                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
+
+                        }
+               else if(_board[row][col]==5) {
+                       var imageObj = new Image();
+                        imageObj.width = "20px";
+                        imageObj.height = "20px";
+                        imageObj.src = "./img/25.png";
+                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
+
+                }
         }
     }
 }
