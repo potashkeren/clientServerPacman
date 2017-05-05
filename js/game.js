@@ -10,8 +10,17 @@ var position  = null,
         keyMap    = {};
 
         var ghosts = [];
-var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }, { x: 1 , y : 21}];
-var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }, { x: 30 , y : 430}];
+var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }];
+var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }];
+
+var starFish = {
+x: 1,
+y : 21,
+boardX: 30 ,
+boardY: 430,
+img: "./img/starfish.png",
+}
+
 keyMap[KEY.ARROW_LEFT]  = LEFT;
 keyMap[KEY.ARROW_UP]    = UP;
 keyMap[KEY.ARROW_RIGHT] = RIGHT;
@@ -72,13 +81,15 @@ COUNTDOWN   = 8,
 EATEN_PAUSE = 9,
 DYING       = 10,
 Pacman      = {};
+
+var pacman_remain = 3;
 var contex = canvas.getContext("2d");
 
 function Start() {
                 score = 0;
                 var cnt = 100;
 
-                var pacman_remain = 1;
+
                 start_time= new Date();
 
                 ///place the pacman in randome cell
@@ -102,6 +113,25 @@ function Start() {
                 }, false);
                  interval=setInterval(UpdatePosition, 80);
             }
+
+function moveStarfish(){
+        var locations = getPossibleMoves(starFish.x,starFish.y);
+        var rnd = Math.floor((Math.random() * locations.length));
+
+        starFish.x = locations[rnd].x;
+        starFish.y = locations[rnd].y;
+}
+
+function drawStarfish(){
+        var locations = getPossibleMoves(starFish.x,starFish.y);
+        var rnd = Math.floor((Math.random() * locations.length));
+
+        var imageObj = new Image();
+                   imageObj.width = "20px";
+                   imageObj.height = "20px";
+                   imageObj.src = starFish.img;
+                   contex.drawImage(imageObj, starFish.x*20+10 - 10, starFish.y*20+10 - 10 , 20, 20);
+}
 
 function fillPoints(){
    //fill Points
@@ -230,8 +260,9 @@ function moveGhosts(){
         }
     }
 }
+
 function getBestMoveForGhost(ghost){
-  var locations = getPossibleGhostMoves(ghost.x, ghost.y);
+  var locations = getPossibleMoves(ghost.x, ghost.y);
   var lastMax = 1000000000000000000000000;
   var result;
      if(locations.length == 1) return {x: locations[0].x,y: locations[0].y};
@@ -247,7 +278,7 @@ function getBestMoveForGhost(ghost){
   return result;
 }
 
-function getPossibleGhostMoves( x,  y){
+function getPossibleMoves( x,  y){
         var locations = [];
         if(_board[x-1][y] != 1){
              var place = {x: x-1, y: y};
@@ -299,7 +330,6 @@ function getRandomDirection(){
     }else{
         return "left";
     }
-
 }
 
 function GetKeyPressed() {
@@ -372,8 +402,7 @@ function UpdatePosition() {
     time_elapsed=(currentTime-start_time)/1000;
     if(eatenCoins==coins)
     {
-        window.clearInterval(interval);
-        window.alert("Game completed");
+        gameOver("coins");
     }
     else
     {
@@ -381,22 +410,31 @@ function UpdatePosition() {
             DrawPacman();
             DrawPoints();
             DrawGhosts();
+            drawStarfish();
             moveGhosts();
+            moveStarfish();
             checkPacmanGhostMeet();
      }
 }
 
+function gameOver(reason){
+     window.clearInterval(interval);
+    if(reason == "coins"){
+        window.alert("Game completed");
+    } else if(reason == "gameover"){
+            window.alert("GAME OVER");
+    }
+}
+
 function checkPacmanGhostMeet(){
 
-for(var i=0; i<numOfGhosts; i++){
+    for(var i=0; i<numOfGhosts; i++){
 
     var ghost = ghosts[i];
     if(ghost.x == shape.i && ghost.y == shape.j){
-        window.clearInterval(interval);
-        window.alert("GAME OVER");
+        gameOver("gameover");
+        }
     }
-
-}
 }
 
 function DrawBoard(){
