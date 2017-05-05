@@ -10,11 +10,14 @@ var position  = null,
         keyMap    = {};
 
         var ghosts = [];
-var corners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }, { x: 30 , y : 430}];
+var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }, { x: 1 , y : 21}];
+var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }, { x: 30 , y : 430}];
 keyMap[KEY.ARROW_LEFT]  = LEFT;
 keyMap[KEY.ARROW_UP]    = UP;
 keyMap[KEY.ARROW_RIGHT] = RIGHT;
 keyMap[KEY.ARROW_DOWN]  = DOWN;
+
+var _ghostMoveModolu = 0;
 
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
@@ -80,15 +83,15 @@ function Start() {
                 ///place the pacman in randome cell
                 var emptyCell = findRandomEmptyCell(_board);
                 _board[emptyCell[0]][emptyCell[1]] = 2;
-               shape.i = emptyCell[0];
-               shape.j = emptyCell[1];
-               //DrawPacman();
+                shape.i = emptyCell[0];
+                shape.j = emptyCell[1];
 
                while(food_remain>0){
                 var emptyCell = findRandomEmptyCell(_board);
                 _board[emptyCell[0]][emptyCell[1]] = 3; // 3==coin
                 food_remain--;
                }
+
                createGhosts();
 
 
@@ -108,30 +111,26 @@ function createGhosts(){
     {
         if (ghosts[i] == null)
         {
-            var ghost = {x : corners[i+1].x, y : corners[i+1].y, radius : 10 , color: 'white', direction : 37, speed : 4, startingX : corners[i+1].x, startingY : corners[i+1].y};
+            var ghost = {x : boardCorners[i+1].x, y : boardCorners[i+1].y, prevX:  boardCorners[i+1].x, prevY: boardCorners[i+1].y,
+             radius: 10,  startingX : canvasCorners[i+1].x, startingY : canvasCorners[i+1].y};
 
             ghost.imagePath = ghostsPictures[i];
             ghost.isAlive = true;
-
-            var position = {x : -1, y : -1};
-            ghost.oldStart = position; // for a star alghorithm
-            var position = {x : -1, y : -1};
-            ghost.oldGoal = position; // for a star alghorithm
 
             ghosts.push(ghost)
         }
     }
 }
+
 function DrawGhosts(){
     for(var i = 0; i < numOfGhosts; i++)
     {
         var ghost = ghosts[i];
-         // regular mode, no eat ghost mode
             var imageObj = new Image();
             imageObj.width = "20px";
             imageObj.height = "20px";
             imageObj.src = ghost.imagePath;
-            contex.drawImage(imageObj, ghost.x - ghost.radius, ghost.y -ghost.radius , 20, 20);
+            contex.drawImage(imageObj, ghost.x*20+10 - ghost.radius, ghost.y*20+10 -ghost.radius , 20, 20);
     }
 }
 function DrawPacman() {
@@ -198,37 +197,58 @@ function DrawPacman() {
             }
 }
 function moveGhosts(){
-    for (var i = 0; i < numOfGhosts; i++)
-    {
-            var g = ghosts[i];
-            var ghost = {x : corners[i+1].x, y : corners[i+1].y,
-                         radius : 10 , color: 'white', direction : 37, speed : 4,
-                         startingX : corners[i+1].x, startingY : corners[i+1].y};
-            var bestMove;
-            var locations = getPossibleGhostMoves(ghost.x, ghost.y);
-            ghosts.push(ghost);
+    _ghostMoveModolu = _ghostMoveModolu + 1 ;
+
+        for (var i = 0; i < numOfGhosts; i++)
+        {
+            if( _ghostMoveModolu % 5 == i){
+                var g = ghosts[i];
+
+                var bestMove = getBestMoveForGhost(g);
+                g.prevX = g.x;
+                g.prevY = g.y;
+                g.x = bestMove.x;
+                g.y = bestMove.y;
+        }
     }
+}
+function getBestMoveForGhost(ghost){
+  var locations = getPossibleGhostMoves(ghost.x, ghost.y);
+  var lastMax = 1000000000000000000000000;
+  var result;
+     if(locations.length == 1) return {x: locations[0].x,y: locations[0].y};
+  for(var i=0; i < 4; i++){
+    if(locations[i] != null){
+            var manhaten = Math.sqrt(Math.pow(locations[i].x-shape.i,2)+ Math.pow(locations[i].y-shape.j,2));
+            if(manhaten < lastMax && (ghost.prevY != locations[i].y || ghost.prevX != locations[i].x )){
+                    lastMax = manhaten;
+                    result = {x: locations[i].x,y: locations[i].y};
+            }
+    }
+  }
+  return result;
 }
 
 function getPossibleGhostMoves( x,  y){
         var locations = [];
-        if(_board[x-1][y] ==0){
+        if(_board[x-1][y] != 1){
              var place = {x: x-1, y: y};
             locations.push(place);
         }
-        if(_board[x+1][y] ==0){
+        if(_board[x+1][y]  != 1){
              var place = {x: x+1, y: y};
             locations.push(place);
         }
-        if(_board[x][y-1] ==0){
+        if(_board[x][y-1] != 1){
              var place = {x: x, y: y-1};
             locations.push(place);
-        } if(_board[x][y+1] ==0){
+        } if(_board[x][y+1] != 1){
              var place = {x: x, y: y+1};
              locations.push(place);
         }
     return locations;
 }
+
 function keyDown(e) {
 if (typeof keyMap[e.keyCode] !== "undefined") {
     due = keyMap[e.keyCode];
@@ -241,11 +261,11 @@ return true;
 
  function findRandomEmptyCell(_board){
     var i = Math.floor((Math.random() * 22) + 1);
-    var j = Math.floor((Math.random() * 18) + 1);
+    var j = Math.floor((Math.random() * 22) + 1);
     while(_board[i][j]!=0)
     {
         i = Math.floor((Math.random() * 22) + 1);
-        j = Math.floor((Math.random() * 18) + 1);
+        j = Math.floor((Math.random() * 22) + 1);
     }
     return [i,j];
  }
@@ -332,6 +352,7 @@ function UpdatePosition() {
             DrawPacman();
             DrawPoints();
             DrawGhosts();
+            moveGhosts();
      }
 }
 
