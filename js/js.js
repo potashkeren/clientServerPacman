@@ -52,6 +52,9 @@ function closeNav() {
 function dialogdown() {
     document.getElementById("Dialog").close();
 }
+function dialogRGdown() {
+    document.getElementById("Dialog_rg").close();
+}
 
 /*#endregion Menu&Dialog*/
 
@@ -112,33 +115,6 @@ $(document).ready(function () {
     /*#region Validation*/
 
     $(function() {
-        $.validator.addMethod("regex", function(value, element, regexpr) {
-            var flag = false;
-            var regexTemplate = /[^\w\d]*(([0-9]+.*[A-Za-z]+.*)|[A-Za-z]+.*([0-9]+.*))/;
-            return regexTemplate.test(value);
-        }, "Please enter a valid pasword.");
-
-        $.validator.addMethod("notContainingNumbers", function(value, element, regexpr) {
-            var regexTemplate = /\d/;
-            return !regexTemplate.test(value);
-        }, "containing number.");
-
-        $.validator.addMethod("isUserExists", function(user, element, regexpr) {
-            if ((user in _users) == false)
-            {
-                return true; // username is free
-            } else {
-                return false; // username is taken
-            }
-        }, "username already exsists.");
-
-         jQuery.validator.addMethod("password", function (value, element) {
-             return this.optional(element) || /^(?=.*[a-zA-Z])(?=.*\d).*$/.test(value);
-          }, "password should be at least 8 digit and contains letter and numbers");
-
-        jQuery.validator.addMethod("firstLastName", function (value, element) {
-              return this.optional(element) || /^[a-zA-Z]*$/.test(value);
-         }, "Name should contain only letters");
 
         $("form[name='registerForm']").validate({
 
@@ -146,20 +122,20 @@ $(document).ready(function () {
             rules: {
                 user_name: {
                     required : true,
-                    //isUserExists : tru
+                    isUserExsist : true,
                 },
                 password: {
                     required : true,
-                    regex: true,
+                    passwordValid: true,
                     minlength: 8,
                 },
                 fr_name: {
                     required: true,
-                   // notContainingNumbers: true
+                    notNumber: true
                 },
                 ls_name: {
                     required: true,
-                    //notContainingNumbers: true
+                    notNumber: true
                 },
                 email: {
                     required: true,
@@ -174,20 +150,16 @@ $(document).ready(function () {
             messages: {
                 user_name: {
                     required: "Please enter a User Name",
-                    //isUserExists: "Username already taken"
                 },
                 password: {
                     required: "Please enter a Password",
                     minlength: "Password must contain at least 8 characters",
-                    //regex: "password should contain at least 1 letter and 1 digit",
                 },
                 fr_name: {
                     required: "Please enter a First name",
-                   // notContainingNumbers: "firstname shouldn't contain numbers"
                 },
                 ls_name: {
                     required: "Please enter a Last name",
-                    //notContainingNumbers: "lastname shouldn't contain numbers"
                 },
                 email: {
                     required: "Please enter a Email"
@@ -224,9 +196,27 @@ $(document).ready(function () {
             submitHandler: function(form) {
                 form.submit();
                 _users[form[0].value] = form[1].value;
+                 document.getElementById("Dialog_rg").showModal();
             }
         });
+
+        jQuery.validator.addMethod("isUserExsist", function(user, element) {
+              if ((user in _users) == false){
+               return true;
+               } else {
+                     return false;
+               }
+         }, "User Name already exsists");
+
+        jQuery.validator.addMethod("passwordValid", function (value, element) {
+               return this.optional(element) ||  /^(?=.*[a-zA-Z])(?=.*\d).*$/.test(value);
+         }, "password must contain at least 1 letter and 1 digit");
+
+        jQuery.validator.addMethod("notNumber", function (value, element) {
+               return this.optional(element) ||/^[^0-9]+$/.test(value);
+         }, "Name shouldn't contain numbers");
     });
+
     /*#endregion Validation*/
 
 

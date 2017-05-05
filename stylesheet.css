@@ -83,7 +83,7 @@
     margin-left: 50px;
 }
 
-#dialog{
+.dialog{
     background-image: url("img/bg2.gif");
     color:white;
     font-family: David;
