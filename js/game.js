@@ -39,35 +39,10 @@ var shape=new Object();
 
 var _lastPressedKey;
 
-var _board =  [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-              	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-              	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-              	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-              	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-              	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-              	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-              	[1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-              	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-              	[1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-              	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-              	[1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-              	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
-              	[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-              ];
+var _board;
 var score;
 var pac_color = "yellow";
-var start_time;
-var time_elapsed;
+
 var interval;
 var state   = WAITING;
 
@@ -91,7 +66,8 @@ var contex = canvas.getContext("2d");
 function Start() {
                 score = 0;
                 var cnt = 100;
-                start_time= new Date();
+                time = $("#selectTime").val();
+                initBoard();
 
                 ///place the pacman in randome cell
                 var emptyCell = findRandomEmptyCell(_board);
@@ -114,9 +90,42 @@ function Start() {
                 }, false);
                  interval=setInterval(UpdatePosition, 80);
             }
+function reStart(){
+        gameOver("");
+        Start();
+
+}
+
+function initBoard(){
+  _board = [
+                           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                         	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                         	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+                         	[1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+                         	[1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+                         	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                         	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+                         	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+                         	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+                         	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                         	[1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+                         	[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+                         	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+                         	[1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+                         	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+                         	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                         	[1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+                         	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+                         	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+                         	[1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                         	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+                         	[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                         ];
+}
 
 function moveStarfish(){
-    if(starFish.isAlive)
+    if(starFish.isAlive == true)
     {
         if( _ghostMoveModolu % 5 == 0){
             var locations = getPossibleMoves(starFish.x,starFish.y);
@@ -143,7 +152,7 @@ function moveStarfish(){
 }
 
 function drawStarfish(){
-    if(starFish.isAlive)
+    if(starFish.isAlive == true)
     {
         var locations = getPossibleMoves(starFish.x,starFish.y);
         var rnd = Math.floor((Math.random() * locations.length));
@@ -182,14 +191,11 @@ function fillPoints(){
 function createGhosts(){
     for (var i = 0; i < numOfGhosts; i++)
     {
-        if (ghosts[i] == null)
-        {
-            var ghost = {x : boardCorners[i+1].x, y : boardCorners[i+1].y, prevX:  boardCorners[i+1].x, prevY: boardCorners[i+1].y,
-             radius: 10,  startingX : canvasCorners[i+1].x, startingY : canvasCorners[i+1].y};
+        var ghost = {x : boardCorners[i].x, y : boardCorners[i].y, prevX:  boardCorners[i].x, prevY: boardCorners[i].y,
+        radius: 10,  startingX : canvasCorners[i].x, startingY : canvasCorners[i].y};
 
-            ghost.imagePath = ghostsPictures[i];
-            ghosts.push(ghost)
-        }
+        ghost.imagePath = ghostsPictures[i];
+        ghosts.push(ghost);
     }
 }
 
@@ -422,14 +428,14 @@ function UpdatePosition() {
            eatenCoins++;
      }
     _board[shape.i][shape.j]=2;
-    var currentTime=new Date();
-    time_elapsed=(currentTime-start_time)/1000;
     if(eatenCoins==coins)
     {
         gameOver("coins");
     }
     else
     {
+            checkPacmanGhostMeet();
+            checkPacmanStartMeet();
             DrawBoard();
             DrawPacman();
             DrawPoints();
@@ -437,29 +443,25 @@ function UpdatePosition() {
             drawStarfish();
             moveGhosts();
             moveStarfish();
-            checkPacmanGhostMeet();
-            checkPacmanStartMeet();
      }
 }
 
 function checkPacmanStartMeet(){
-    if( starFish.isAlive && starFish.x == shape.i && starFish.y == shape.j){
+    if( starFish.isAlive == true && starFish.x == shape.i && starFish.y == shape.j){
        score = score + 50;
        starFish.isAlive = false;
-
     }
 }
 
-
-
 function gameOver(reason){
      window.clearInterval(interval);
+     window.clearInterval(counter);
     if(reason == "coins"){
         window.alert("Game completed");
     } else if(reason == "gameover"){
             window.alert("GAME OVER");
-    } else{
-       window.alert("Else reson");
+    } else if (reason == ("time is up")){
+       window.alert("time is up");
     }
 }
 
@@ -469,6 +471,7 @@ function timer()
   if (time == 0)
   {
      clearInterval(counter);
+     gameOver("time is up");
      return;
   }
   $("#lblTime").text(time);

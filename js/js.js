@@ -32,7 +32,6 @@ function login() {
 
 function playGame(){
     numOfGhosts = $("#selectGhosts").val();
-    time = $("#selectTime").val();
     coins = $("#selectCoins").val();
     $("#settings").hide();
     $("#play").show();
