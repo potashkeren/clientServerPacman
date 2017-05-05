@@ -97,6 +97,7 @@
                         <img src="img/icon1.png" width="20px" height="20px" style="padding-left: 28px; padding-top: 1px"/>
                     </span>
                     <br>
+                <br>
                     <input placeholder="Password" id="logPassword" type="password" required>
                     <span class="icon2">
                         <img src="img/icon2.png" width="20px" height="20px" style="padding-left: 28px; padding-top: 13px"/>
@@ -113,12 +114,12 @@
             <h4 id="welcome_user"></h4>
             <canvas id="canvas" height="460" width="460"></canvas>
             <div id="user_board">
-                <label class="sub-header label_Board">SCORE:</label>
-                <label id="lblScore" type="text" />
-                <label class="sub-header label_Board">TIME LEFT:</label>
-                <label id="lblTime" type="text" />
-                <label class="sub-header label_Board">LIVES:</label>
-                <label class="sub-header label_Board">POINTS:</label>
+                <p class="sub-header lbl_Board">SCORE:</p>
+                <p class="sub-header lbl_input" id="lblScore" />
+                <p class="sub-header lbl_Board">TIME LEFT:</p>
+                <p class="sub-header lbl_input" id="lblTime" />
+                <p class="sub-header lbl_Board">LIVES:</p>
+                <p class="sub-header lbl_Board">EXTRA:</p>
             </div>
         </div>
         <div id="settings">
@@ -145,16 +146,16 @@
                     <option>90</option>
                 </select>
             </div>
-            <p class="setting_header">Time:</p>
-            <div class="styled-select yellow rounded" style="width: 8%; margin-left: 46%;margin-right: 46%;">
+            <p class="setting_header">Time (sec):</p>
+            <div class="styled-select yellow rounded">
                 <select id="selectTime">
-                    <option>60 sec</option>
-                    <option>90 sec</option>
-                    <option>120 sec</option>
-                    <option>150 sec</option>
-                    <option>180 sec</option>
-                    <option>210 sec</option>
-                    <option>240 sec</option>
+                    <option>60</option>
+                    <option>90</option>
+                    <option>120</option>
+                    <option>150</option>
+                    <option>180</option>
+                    <option>210</option>
+                    <option>240</option>
                 </select>
             </div>
             <button class="submit" onclick="playGame()">PLAY GAME</button>

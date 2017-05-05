@@ -401,7 +401,7 @@ footer{
     padding-top: 2px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 2px;
+    padding-bottom: 7px;
     color: white;
     letter-spacing: 3px;
     display: block;
@@ -416,7 +416,8 @@ footer{
  margin:0;
  padding-right:51%;
  padding-top:5%;
- letter-spacing: 3px;
+ letter-spacing: 2px;
+ font-weight: normal;
  }
 
 #user_board{
@@ -426,9 +427,25 @@ footer{
     font-family: 'Shrikhand', cursive;
     border-radius: 10%;
     float:right;
+
 }
-.label_Board{
+.lbl_Board{
     font-size: 20px;
+    padding-top:0;
+    padding-bottom:0;
+     margin-top:2px;
+     margin-bottom:2px;
+     font-weight: normal;
+}
+
+.lbl_input{
+    color:yellow;
+    font-size: 22px;
+     padding-top:0;
+     padding-bottom:0;
+     margin-top:2px;
+     margin-bottom:2px;
+     font-weight: normal;
 }
 
 

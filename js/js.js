@@ -36,7 +36,7 @@ function playGame(){
     coins = $("#selectCoins").val();
     $("#settings").hide();
     $("#play").show();
-     $("#welcome_user").text("Welcome   " + _currentUser);
+     $("#welcome_user").text("WELCOME   " + _currentUser);
     Start();
 
 }

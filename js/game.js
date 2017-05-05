@@ -28,7 +28,7 @@ keyMap[KEY.ARROW_DOWN]  = DOWN;
 
 var _ghostMoveModolu = 0;
 var eatenCoins =0;
-
+var counter=setInterval(timer, 1000);
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
 var shape=new Object();
@@ -182,8 +182,8 @@ function DrawGhosts(){
     }
 }
 function DrawPacman() {
-    lblScore.value = score;
-    lblTime.value = time_elapsed;
+     $("#lblScore").text(score);
+     $("#lblTime").text(time);
     var center = new Object();
     center.x = shape.i*20 + 10;// * 50 + 30;
     center.y = shape.j*20 + 10;// * 50 + 30;
@@ -486,5 +486,16 @@ function DrawPoints(){
                 }
         }
     }
+}
+
+function timer()
+{
+  time=time-1;
+  if (time == 0)
+  {
+     clearInterval(counter);
+     return;
+  }
+  $("#lblTime").text(time);
 }
 
