@@ -9,16 +9,25 @@ var position  = null,
         score     = 5,
         keyMap    = {};
 
-        var ghosts = [];
+keyMap[KEY.ARROW_LEFT]  = LEFT;
+keyMap[KEY.ARROW_UP]    = UP;
+keyMap[KEY.ARROW_RIGHT] = RIGHT;
+keyMap[KEY.ARROW_DOWN]  = DOWN;
+
+
+var ghosts = [];
 var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }];
 var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }];
 
 var starFish = {
-x: 1,
-y : 21,
-boardX: 30 ,
-boardY: 430,
-img: "./img/starfish.png",
+        x: 1,
+        y : 21,
+        prevX: 1,
+        prevY: 21,
+        boardX: 30 ,
+        boardY: 430,
+        img: "./img/starfish.png",
+        isAlive: true,
 }
 
 keyMap[KEY.ARROW_LEFT]  = LEFT;
@@ -182,8 +191,8 @@ function DrawGhosts(){
     }
 }
 function DrawPacman() {
-     $("#lblScore").text(score);
-     $("#lblTime").text(time);
+    lblScore.value = score;
+    lblTime.value = time_elapsed;
     var center = new Object();
     center.x = shape.i*20 + 10;// * 50 + 30;
     center.y = shape.j*20 + 10;// * 50 + 30;
@@ -486,16 +495,5 @@ function DrawPoints(){
                 }
         }
     }
-}
-
-function timer()
-{
-  time=time-1;
-  if (time == 0)
-  {
-     clearInterval(counter);
-     return;
-  }
-  $("#lblTime").text(time);
 }
 
