@@ -110,13 +110,14 @@
     <div id="game">
         <button id="logout" class="logout">Logout</button>
         <div id = "play">
-        <input id="lblScore" type="text" />
-        <label>TIME:</label>
-        <input id="lblTime" type="text" />
+        <h4 id="welcome_user"></h4>
+            <input id="lblScore" type="text" />
+            <label>TIME:</label>
+            <input id="lblTime" type="text" />
         <canvas id="canvas" height="460" width="460"></canvas>
         </div>
         <div id="settings">
-            <div style="height:20%"></div>
+            <div style="height:12%"></div>
             <p class="setting_header">Num of ghosts: </p>
             <div class="styled-select yellow rounded">
                 <select id="selectGhosts">
@@ -140,7 +141,7 @@
                 </select>
             </div>
             <p class="setting_header">Time:</p>
-            <div class="styled-select yellow rounded">
+            <div class="styled-select yellow rounded" style="width: 8%; margin-left: 46%;margin-right: 46%;">
                 <select id="selectTime">
                     <option>60 sec</option>
                     <option>90 sec</option>
@@ -151,7 +152,7 @@
                     <option>240 sec</option>
                 </select>
             </div>
-            <button onclick="playGame()">PLAY GAME</button>
+            <button class="submit" onclick="playGame()">PLAY GAME</button>
         </div>
     </div>
     <dialog id="Dialog" >

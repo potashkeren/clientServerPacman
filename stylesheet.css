@@ -19,6 +19,7 @@
 }
 /*#endregion Header_Style*/
 
+
 /*#region Menu_Style*/
 
 #span {
@@ -241,7 +242,7 @@
     vertical-align: baseline;
     height: 80%;
     width: 50%;
-    padding: 3%;
+    padding: 0 3% 3% 3%;
     display: block;
     margin-left: 25%;
      margin-right: 30%
@@ -362,8 +363,6 @@ footer{
     display: inline-block;
     font-family: David;
 }
-
-
 .styled-select {
    height: 29px;
    overflow: hidden;
@@ -397,19 +396,27 @@ footer{
    border-radius: 20px;
 }
 .yellow select  { color: #000; }
-
 .setting_header{
     font-size: 20px;
-    padding-top: 10px;
+    padding-top: 2px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 10px;
+    padding-bottom: 2px;
     color: white;
     letter-spacing: 3px;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
     font-family: 'Shrikhand', cursive;
      }
+
+ #welcome_user{
+ color:white;
+ font-size: 18px;
+ font-family: 'Shrikhand', cursive;
+ margin:0;
+ padding-right:50%;
+ padding-top:5%;
+ }
 
 
 
