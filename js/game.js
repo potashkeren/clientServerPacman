@@ -34,7 +34,7 @@ var _board;
 var score;
 var pac_color = "yellow";
 
-var interval;
+var interval, _audio;
 var state   = WAITING;
 
 /* Human readable keyCode index */
@@ -86,6 +86,8 @@ function reStart(){
 }
 
 function initBoard(){
+ _audio = new Audio('./data/StarWars.mp3');
+ _audio.play();
   _board = [
                            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                          	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -466,6 +468,7 @@ function checkPacmanStartMeet(){
 function gameOver(reason){
      window.clearInterval(interval);
      window.clearInterval(counter);
+     _audio.pause();
     if(reason == "coins"){
         window.alert("Game completed");
     } else if(reason == "gameover"){
