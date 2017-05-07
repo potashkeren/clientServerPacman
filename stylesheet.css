@@ -390,6 +390,12 @@ footer{
    height: 34px;
    width: 268px;
 }
+.bday-select{
+   margin-left: 0;
+   margin-right: 0;
+   width:60px;
+  margin-bottom:0;
+}
 .yellow  { background-color: #eec111; }
 .rounded {
    -webkit-border-radius: 20px;
