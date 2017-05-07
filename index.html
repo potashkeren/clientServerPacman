@@ -13,9 +13,7 @@
     <table id="p1">
         <tr>
             <td class="tb1" width="10%" style="text-align: left" > PacMan Game </td>
-            <td width="25%"> <img src="img/pac.png" height="30" /></td>
-            <td width="1%"> <img src="img/pac.png" height="30" /></td>
-            <td width="1%"> <img src="img/pac.png" height="30" /></td>
+            <td width="25%"> <img src="img/paclogo.gif" height="30" /></td>
             <td class="tb1" width="30%" style="font-size: 15px"> Created By: Maayan Elgamil & Keren Potash</td>
         </tr>
     </table>
@@ -114,7 +112,7 @@
 </div>
     <div id="game">
         <button id="logout" class="logout">Logout</button>
-        <div id = "play">
+        <div id = "play" scroll="no">
             <h4 id="welcome_user"></h4>
             <canvas id="canvas" height="460" width="460"></canvas>
             <div id="user_board">
@@ -123,6 +121,11 @@
                 <p class="sub-header lbl_Board">TIME LEFT:</p>
                 <p class="sub-header lbl_input" id="lblTime" />
                 <p class="sub-header lbl_Board">LIVES:</p>
+                <div id="lives">
+                    <img src="img/life.png" style="width:30px; height:30px;" />
+                    <img src="img/life.png" style="width:30px; height:30px;" />
+                    <img src="img/life.png" style="width:30px; height:30px;" />
+                </div>
                 <p class="sub-header lbl_Board">EXTRA:</p>
                 <button class="submit" onclick="reStart()">Reset Game</button>
             </div>

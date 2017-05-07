@@ -35,7 +35,7 @@ function playGame(){
     coins = $("#selectCoins").val();
     $("#settings").hide();
     $("#play").show();
-     $("#welcome_user").text("WELCOME"  + _currentUser);
+     $("#welcome_user").text("WELCOME" +"\u00A0" + _currentUser);
     Start();
 
 }
@@ -54,6 +54,10 @@ function dialogdown() {
 }
 function dialogRGdown() {
     document.getElementById("Dialog_rg").close();
+    $('#regDiv').hide();
+    $("#game").show();
+    $("#settings").show();
+    $("#play").hide();
 }
 
 /*#endregion Menu&Dialog*/
@@ -122,11 +126,12 @@ $(document).ready(function () {
             rules: {
                 user_name: {
                     required : true,
-                    isUserExsist : true,
+                    isUserFree : true,
                 },
                 password: {
                     required : true,
-                    passwordValid: true,
+                    oneLetterDigit: true,
+                    onlyLetterDigit: true,
                     minlength: 8,
                 },
                 fr_name: {
@@ -200,7 +205,7 @@ $(document).ready(function () {
             }
         });
 
-        jQuery.validator.addMethod("isUserExsist", function(user, element) {
+        jQuery.validator.addMethod("isUserFree", function(user, element) {
               if ((user in _users) == false){
                return true;
                } else {
@@ -208,13 +213,18 @@ $(document).ready(function () {
                }
          }, "User Name already exsists");
 
-        jQuery.validator.addMethod("passwordValid", function (value, element) {
+        jQuery.validator.addMethod("oneLetterDigit", function (value, element) {
                return this.optional(element) ||  /^(?=.*[a-zA-Z])(?=.*\d).*$/.test(value);
-         }, "password must contain at least 1 letter and 1 digit");
+         }, "Password should contain at least 1 letter and 1 digit");
 
         jQuery.validator.addMethod("notNumber", function (value, element) {
                return this.optional(element) ||/^[^0-9]+$/.test(value);
          }, "Name shouldn't contain numbers");
+
+        jQuery.validator.addMethod("onlyLetterDigit", function (value, element) {
+               return this.optional(element) ||/^[0-9a-zA-Z]+$/.test(value);
+        }, "Password should contain only letters and digits");
+
     });
 
     /*#endregion Validation*/
