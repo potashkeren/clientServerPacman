@@ -73,18 +73,27 @@ $(document).ready(function () {
         $('#welcomeDiv').show();
         $('#regDiv').hide();
         $('#loginDiv').hide();
+        $("#game").hide();
+        $("#settings").hide();
+        $("#play").hide();
     });
 
     $('#regNav').click(function () {
         $('#welcomeDiv').hide();
         $('#regDiv').show();
         $('#loginDiv').hide();
+        $("#game").hide();
+        $("#settings").hide();
+        $("#play").hide();
     });
 
     $('#loginNav').click(function () {
         $('#welcomeDiv').hide();
         $('#regDiv').hide();
         $('#loginDiv').show();
+        $("#game").hide();
+        $("#settings").hide();
+        $("#play").hide();
     });
 
     $('#aboutNav').click(function () {
@@ -95,12 +104,18 @@ $(document).ready(function () {
         $('#welcomeDiv').hide();
         $('#regDiv').show();
         $('#loginDiv').hide();
+        $("#game").hide();
+        $("#settings").hide();
+        $("#play").hide();
     });
 
     $('#logDiv1').click(function () {
         $('#welcomeDiv').hide();
         $('#regDiv').hide();
         $('#loginDiv').show();
+        $("#game").hide();
+        $("#settings").hide();
+        $("#play").hide();
     });
 
     $('#main').click(function () {
