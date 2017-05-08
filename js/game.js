@@ -23,7 +23,7 @@ var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 
 var starFish;
 
 var _ghostMoveModolu = 0;
-var _eatenCoins =0;
+var _eatenCoins;
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
 var shape=new Object();
@@ -57,6 +57,7 @@ var contex = canvas.getContext("2d");
 function Start() {
                 _isGameOn = true;
                 score = 0;
+                 _eatenCoins=0;
                 var cnt = 100;
                 time = $("#selectTime").val();
                 initBoard();
