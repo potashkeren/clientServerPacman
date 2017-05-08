@@ -80,6 +80,7 @@ function Start() {
                 }, false);
                  interval=setInterval(UpdatePosition, 80);
             }
+
 function reStart(){
         gameOver("");
         Start();
@@ -202,7 +203,8 @@ function fillPoints(){
    }
    var emptyCell = findRandomEmptyCell(_board);
     _board[emptyCell[0]][emptyCell[1]] = 8; // Extra Time
-
+   var emptyCell2 = findRandomEmptyCell(_board);
+   _board[emptyCell2[0]][emptyCell2[1]] = 6; // Extra Life
 }
 
 function createGhosts(){
@@ -439,15 +441,16 @@ function UpdatePosition() {
     }
     else
     {
+            DrawPacman();
             checkPacmanGhostMeet();
             checkPacmanStarMeet();
+            moveGhosts();
+            moveStarfish();
             DrawBoard();
-            DrawPacman();
             DrawPoints();
             DrawGhosts();
             drawStarfish();
-            moveGhosts();
-            moveStarfish();
+
      }
 }
 
@@ -470,6 +473,15 @@ function checkScores(){
       else if(_board[shape.i][shape.j]==8){
             time = time + 30;
       }
+    else if(_board[shape.i][shape.j]==6){
+          _pacman_remain++; // add life
+            var elem = document.createElement("img"); // draw life
+            elem.src = 'img/life.png';
+            elem.setAttribute("height", "30");
+            elem.setAttribute("width", "30");
+            var livesDive = document.getElementById("lives");
+            livesDive.appendChild(elem);
+    }
 }
 
 function checkPacmanStarMeet(){
@@ -499,8 +511,7 @@ function gameOver(reason){
     }
 }
 
-function timer()
-{
+function timer(){
   time=time-1;
   if (time == 0)
   {
@@ -537,8 +548,17 @@ function pacmanStrike(){
   _board[emptyCell[0]][emptyCell[1]] = 2;
   shape.i = emptyCell[0];
   shape.j = emptyCell[1];
-  //DrawPacman();
+  DrawPacman();
   createGhosts();
+   window.clearInterval(interval);
+  keysDown = {};
+  addEventListener("keydown", function (e) {
+      keysDown[e.keyCode] = true;
+  }, false);
+  addEventListener("keyup", function (e) {
+      keysDown[e.keyCode] = false;
+  }, false);
+   interval=setInterval(UpdatePosition, 80);
 
 }
 
@@ -559,6 +579,7 @@ contex.clearRect(0, 0, canvas.width, canvas.height);
         }
     }
 }
+
 function DrawPoints(){
  for (var row = 0; row < _board.length; row++)
     {
@@ -593,6 +614,14 @@ function DrawPoints(){
                         imageObj.width = "20px";
                         imageObj.height = "20px";
                         imageObj.src = "./img/time.png";
+                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
+
+                }
+               else if(_board[row][col]==6) {
+                       var imageObj = new Image();
+                        imageObj.width = "20px";
+                        imageObj.height = "20px";
+                        imageObj.src = "./img/life.png";
                         contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
 
                 }
