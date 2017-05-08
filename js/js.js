@@ -13,7 +13,6 @@ function login() {
 
     if(!(name in _users)){
     $("#errorUser").text("User does not exist in the system");
-       // alert("User does not exist in the system");
         return;
     }
     else {
@@ -27,20 +26,32 @@ function login() {
         }
         else {
         $("#errorUser").text("Wrong password, Please try again");
-        //$('<p>Wrong password, Please try again</p>').appendTo('#errorPswd')
-          //  alert("Wrong password, Please try again");
             return;
         }
     }
 }
 
 function playGame(){
+
+    var checkCoins,checkTime;
+    document.getElementById("errorCoins").innerHTML ="";
+    document.getElementById("errorTime").innerHTML ="";
+    checkCoins = document.getElementById("selectCoins").value;
+    checkTime = document.getElementById("selectTime").value;
+    if (isNaN(checkCoins) || checkCoins < 50 || checkCoins > 90) {
+        document.getElementById("errorCoins").innerHTML = "The number of coins should be between 50 and 90";
+    }
+    else if (isNaN( checkTime) ||  checkTime < 60 ) {
+        document.getElementById("errorTime").innerHTML = "Game time should be at least 60 seconds";
+    }
+    else{
     numOfGhosts = $("#selectGhosts").val();
     coins = $("#selectCoins").val();
     $("#settings").hide();
     $("#play").show();
      $("#welcome_user").text("WELCOME" +"\u00A0" + _currentUser);
     Start();
+    }
 }
 /*#region Menu&Dialog*/
 // menu function

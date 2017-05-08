@@ -152,10 +152,14 @@
             </div>
             <p class="setting_header" style="padding-bottom:0;">Enter num of coins:</p>
             <p class="setting_valid">min 50, max 90</p>
-            <input id="selectCoins" type="text" value="50" style="">
+            <input id="selectCoins" type="number"  value="50" >
+            <br/>
+            <p class="error" id="errorCoins" style="font-size:18px; margin-top:9px;margin-bottom: 0"></p>
             <p class="setting_header" style="padding-bottom:0;">Enter game time (sec):</p>
             <p class="setting_valid">min 60 seconds</p>
-            <input  id="selectTime" type="text" value="60">
+            <input  id="selectTime" type="number" value="60">
+            <br/>
+            <p class="error" id="errorTime" style="font-size:18px; margin-top:9px;margin-bottom: 0"></p>
             <br/>
             <button class="submit" onclick="playGame()">PLAY GAME</button>
         </div>

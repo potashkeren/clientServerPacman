@@ -429,7 +429,7 @@ footer{
     padding-top: 2px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 7px;
+    padding-bottom: 2px;
     color: white;
     letter-spacing: 3px;
     display: block;
@@ -494,11 +494,11 @@ font-weight:none;
 color: white;
 }
 
-.sett input[type="text"] {
+.sett input[type="number"] {
     outline: none;
     margin: 4px 0px 1px 1px;
     color: black;
-    padding: 5px 30px;
+    padding: 5px 20px;
     border: none;
     border-radius: 20px;
     width: 6%;
