@@ -84,7 +84,6 @@ function Start() {
 function reStart(){
         gameOver("");
         Start();
-
 }
 
 function initBoard(){
@@ -453,6 +452,13 @@ function UpdatePosition() {
 
      }
 }
+
+function backToSettings(){
+gameOver("");
+$("#settings").show();
+$("#play").hide();
+}
+
 
 function checkScores(){
     if(_board[shape.i][shape.j]==3)
