@@ -441,12 +441,12 @@ function UpdatePosition() {
     }
     else
     {
+            DrawBoard();
             DrawPacman();
             checkPacmanGhostMeet();
             checkPacmanStarMeet();
             moveGhosts();
             moveStarfish();
-            DrawBoard();
             DrawPoints();
             DrawGhosts();
             drawStarfish();
