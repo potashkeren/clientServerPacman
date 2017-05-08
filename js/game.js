@@ -79,7 +79,7 @@ function Start() {
                 addEventListener("keyup", function (e) {
                     keysDown[e.keyCode] = false;
                 }, false);
-                 interval=setInterval(UpdatePosition, 80);
+                 interval=setInterval(UpdatePosition, 90);
             }
 
 function reStart(){
@@ -299,7 +299,7 @@ function moveGhosts(){
 
         for (var i = 0; i < numOfGhosts; i++)
         {
-            if( _ghostMoveModolu % 5 == i){
+            if( _ghostMoveModolu % 4 == i){
                 var g = ghosts[i];
 
                 var bestMove = getBestMoveForGhost(g);
@@ -504,7 +504,7 @@ function gameOver(reason){
      _isGameOn = false;
      _audio.pause();
     if(reason == "coins"){
-       $("#dialogText").text("You Won!");
+       $("#dialogText").text("You Won! \n Your score is: " + score);
         document.getElementById("Game Over").showModal();
     } else if(reason == "gameover"){
          $("#dialogText").text("You Lost! \n Your score is: " + score);
