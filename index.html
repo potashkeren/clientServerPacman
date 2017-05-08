@@ -102,12 +102,15 @@
                         <img src="img/icon1.png" width="20px" height="20px" style="padding-left: 28px; padding-top: 1px"/>
                     </span>
                     <br>
-                <br>
+                    <br>
                     <input placeholder="Password" id="logPassword" type="password" required>
                     <span class="icon2">
                         <img src="img/icon2.png" width="20px" height="20px" style="padding-left: 28px; padding-top: 13px"/>
                     </span>
-                    <br>
+                     <div  >
+                         <h4  class="error" id="errorUser"></h4>
+                     </div>
+
                     <button class="submit" onclick="login()">Login</button>
             </div>
         </div>
@@ -137,7 +140,7 @@
                 <button class="submit" style="margin:10px 20px 10px 20px;" onclick="backToSettings()">Back to settings</button>
             </div>
         </div>
-        <div id="settings">
+        <div id="settings" class="sett">
             <div style="height:12%"></div>
             <p class="setting_header">Num of ghosts: </p>
             <div class="styled-select yellow rounded">
@@ -147,39 +150,20 @@
                     <option>3</option>
                 </select>
             </div>
-            <p class="setting_header">Num of coins:</p>
-            <div class="styled-select yellow rounded">
-                <select id="selectCoins">
-                    <option>50</option>
-                    <option>55</option>
-                    <option>60</option>
-                    <option>65</option>
-                    <option>70</option>
-                    <option>75</option>
-                    <option>80</option>
-                    <option>85</option>
-                    <option>90</option>
-                </select>
-            </div>
-            <p class="setting_header">Time (sec):</p>
-            <div class="styled-select yellow rounded">
-                <select id="selectTime">
-                    <option>60</option>
-                    <option>90</option>
-                    <option>120</option>
-                    <option>150</option>
-                    <option>180</option>
-                    <option>210</option>
-                    <option>240</option>
-                </select>
-            </div>
+            <p class="setting_header" style="padding-bottom:0;">Enter num of coins:</p>
+            <p class="setting_valid">min 50, max 90</p>
+            <input id="selectCoins" type="text" value="50" style="">
+            <p class="setting_header" style="padding-bottom:0;">Enter game time (sec):</p>
+            <p class="setting_valid">min 60 seconds</p>
+            <input  id="selectTime" type="text" value="60">
+            <br/>
             <button class="submit" onclick="playGame()">PLAY GAME</button>
         </div>
     </div>
     <dialog id="Dialog" class="dialog" >
-        <p>Created By: Maayan Elgamil & Keren Potash</p>
+        <p style="font-weight: bold; font-size: 18px;">Created By: Maayan Elgamil & Keren Potash</p>
         <br/>
-        <p>Our Difficulties: </p>
+        <p style="font-weight: bold; font-size: 18px;">Our Difficulties: </p>
         <p>In this project we had to write a lot of JavaScript code for the first time, and we found it very hard to </p>
         <p>write the classes and functions in a readable way, the code was in a lot of mess most of the time.</p>
         <p>Another difficulty was to implement the validation plugin in the registration window, this took us a lot of time</p>

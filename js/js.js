@@ -12,7 +12,8 @@ function login() {
     var pwd = document.getElementById("logPassword").value;
 
     if(!(name in _users)){
-        alert("User does not exist in the system");
+    $("#errorUser").text("User does not exist in the system");
+       // alert("User does not exist in the system");
         return;
     }
     else {
@@ -25,7 +26,9 @@ function login() {
            $("#play").hide();
         }
         else {
-            alert("Wrong password, Please try again");
+        $("#errorUser").text("Wrong password, Please try again");
+        //$('<p>Wrong password, Please try again</p>').appendTo('#errorPswd')
+          //  alert("Wrong password, Please try again");
             return;
         }
     }
