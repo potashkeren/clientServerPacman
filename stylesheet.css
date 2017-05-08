@@ -88,7 +88,8 @@
     color:white;
     font-family: David;
     letter-spacing: 1px;
-    font-size: 20px;
+    font-size: 15px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
 .gameover{
@@ -173,6 +174,7 @@
     -moz-transition: 0.5s all;
     border-radius: 50%;
     font-family: 'Shrikhand', cursive;
+    align: center;
 }
 .submit:hover{
     background-color: #b5b6c1;
