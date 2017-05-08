@@ -96,7 +96,9 @@
     color:white;
     font-family: David;
     letter-spacing: 1px;
-    font-size: 20px;
+    font-size: 15px;
+    text-align: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
 @media screen and (max-height: 450px) {

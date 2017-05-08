@@ -1,7 +1,7 @@
 /* Human readable keyCode index */
 var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
 
-var counter=setInterval(timer, 1000);
+var counter;
 var position  = null,
         direction = null,
         eaten     = null,
@@ -87,6 +87,7 @@ function reStart(){
 }
 
 function initBoard(){
+counter = setInterval(timer, 1000);
 _pacman_remain = 2;
  _audio = new Audio('./data/StarWars.mp3');
  _audio.play();
@@ -502,20 +503,18 @@ function gameOver(reason){
      _isGameOn = false;
      _audio.pause();
     if(reason == "coins"){
-        var modal = document.getElementById("Game Over");
-        modal.text("You Won!");
-        modal.showModal();
+       $("#dialogText").text("You Won!");
+        document.getElementById("Game Over").showModal();
     } else if(reason == "gameover"){
-         var modal = document.getElementById("Game Over");
-         modal.text("You Lost! \n Your score is: " + score);
-         modal.showModal();
+         $("#dialogText").text("You Lost! \n Your score is: " + score);
+         document.getElementById("Game Over").showModal();
     } else if (reason == ("time is up")){
-       var modal = document.getElementById("Game Over");
        if(score < 150)
-             modal.text("You can do better. \n Your score is: "+ score);
+          $("#dialogText").text("You can do better. \n Your score is: "+ score);
        else
-             modal.text("We have a winner. \n Your score is: "+ score);
-       modal.showModal();
+           $("#dialogText").text("We have a winner. \n Your score is: "+ score);
+
+      document.getElementById("Game Over").showModal();
      }
 
     //remove heartes from the hearts div
@@ -555,25 +554,32 @@ function checkPacmanGhostMeet(){
     }
 }
 
+function meetGhost(){
+       document.getElementById("Strike").close();
+
+      var emptyCell = findRandomEmptyCell(_board);
+      _board[emptyCell[0]][emptyCell[1]] = 2;
+      shape.i = emptyCell[0];
+      shape.j = emptyCell[1];
+      DrawPacman();
+      createGhosts();
+
+      keysDown = {};
+      addEventListener("keydown", function (e) {
+          keysDown[e.keyCode] = true;
+      }, false);
+      addEventListener("keyup", function (e) {
+          keysDown[e.keyCode] = false;
+      }, false);
+       interval=setInterval(UpdatePosition, 80);
+}
+
 function pacmanStrike(){
-  window.alert("STRIKE number" + 3 - _pacman_remain + 1);
+       window.clearInterval(interval);
 
-  var emptyCell = findRandomEmptyCell(_board);
-  _board[emptyCell[0]][emptyCell[1]] = 2;
-  shape.i = emptyCell[0];
-  shape.j = emptyCell[1];
-  DrawPacman();
-  createGhosts();
-   window.clearInterval(interval);
-  keysDown = {};
-  addEventListener("keydown", function (e) {
-      keysDown[e.keyCode] = true;
-  }, false);
-  addEventListener("keyup", function (e) {
-      keysDown[e.keyCode] = false;
-  }, false);
-   interval=setInterval(UpdatePosition, 80);
-
+  var  livesLeft = _pacman_remain +1;
+   $("#strikeText").text("You met a ghost! \n you have " + livesLeft + " lives left");
+   document.getElementById("Strike").showModal();
 }
 
 function DrawBoard(){
