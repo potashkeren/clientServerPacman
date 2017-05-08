@@ -51,10 +51,11 @@ EATEN_PAUSE = 9,
 DYING       = 10,
 Pacman      = {};
 
-var pacman_remain = 3;
+var _pacman_remain;
 var contex = canvas.getContext("2d");
 
 function Start() {
+                _isGameOn = true;
                 score = 0;
                 var cnt = 100;
                 time = $("#selectTime").val();
@@ -86,6 +87,7 @@ function reStart(){
 }
 
 function initBoard(){
+_pacman_remain = 2;
  _audio = new Audio('./data/StarWars.mp3');
  _audio.play();
   _board = [
@@ -123,6 +125,17 @@ function initBoard(){
                     img: "./img/starfish.png",
                     isAlive: true,
             };
+            //reset life
+            for(var i =0 ; i<3; i++){
+               var elem = document.createElement("img");
+               elem.src = 'img/life.png';
+               elem.setAttribute("height", "30");
+               elem.setAttribute("width", "30");
+               var livesDive = document.getElementById("lives");
+               livesDive.appendChild(elem);
+               livesDive.appendChild(elem);
+               livesDive.appendChild(elem);
+            }
 }
 
 function moveStarfish(){
@@ -193,6 +206,7 @@ function fillPoints(){
 }
 
 function createGhosts(){
+    ghosts = [];
     for (var i = 0; i < numOfGhosts; i++)
     {
         var ghost = {x : boardCorners[i].x, y : boardCorners[i].y, prevX:  boardCorners[i].x, prevY: boardCorners[i].y,
@@ -426,7 +440,7 @@ function UpdatePosition() {
     else
     {
             checkPacmanGhostMeet();
-            checkPacmanStartMeet();
+            checkPacmanStarMeet();
             DrawBoard();
             DrawPacman();
             DrawPoints();
@@ -458,7 +472,7 @@ function checkScores(){
       }
 }
 
-function checkPacmanStartMeet(){
+function checkPacmanStarMeet(){
     if( starFish.isAlive == true && starFish.x == shape.i && starFish.y == shape.j){
        score = score + 50;
        starFish.isAlive = false;
@@ -468,6 +482,7 @@ function checkPacmanStartMeet(){
 function gameOver(reason){
      window.clearInterval(interval);
      window.clearInterval(counter);
+     _isGameOn = false;
      _audio.pause();
     if(reason == "coins"){
         window.alert("Game completed");
@@ -475,6 +490,12 @@ function gameOver(reason){
             window.alert("GAME OVER");
     } else if (reason == ("time is up")){
        window.alert("time is up");
+    }
+
+    //remove heartes from the hearts div
+    var heartDiv = document.getElementById("lives");
+    while (heartDiv.hasChildNodes()) {
+        heartDiv.removeChild(heartDiv.lastChild);
     }
 }
 
@@ -496,9 +517,29 @@ function checkPacmanGhostMeet(){
 
     var ghost = ghosts[i];
     if(ghost.x == shape.i && ghost.y == shape.j){
-        gameOver("gameover");
+            if(_pacman_remain == 0){
+                gameOver("gameover");
+            }
+            else{
+                _pacman_remain--;
+                var heartDiv = document.getElementById("lives");
+                heartDiv.removeChild(heartDiv.lastChild);
+                pacmanStrike();
+            }
         }
     }
+}
+
+function pacmanStrike(){
+  window.alert("STRIKE number" + 3 - _pacman_remain + 1);
+
+  var emptyCell = findRandomEmptyCell(_board);
+  _board[emptyCell[0]][emptyCell[1]] = 2;
+  shape.i = emptyCell[0];
+  shape.j = emptyCell[1];
+  //DrawPacman();
+  createGhosts();
+
 }
 
 function DrawBoard(){
@@ -518,7 +559,6 @@ contex.clearRect(0, 0, canvas.width, canvas.height);
         }
     }
 }
-
 function DrawPoints(){
  for (var row = 0; row < _board.length; row++)
     {

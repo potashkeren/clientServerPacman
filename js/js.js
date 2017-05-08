@@ -2,6 +2,7 @@
 var _currentUser;
 //init dictionary of _users : key-userName,value-password
 var _users = {};
+var _isGameOn=false;
 //add default _users
 _users["a"] = "a";
 _users["test2017"] = "test2017";
@@ -37,7 +38,6 @@ function playGame(){
     $("#play").show();
      $("#welcome_user").text("WELCOME" +"\u00A0" + _currentUser);
     Start();
-
 }
 /*#region Menu&Dialog*/
 // menu function
@@ -76,6 +76,9 @@ $(document).ready(function () {
         $("#game").hide();
         $("#settings").hide();
         $("#play").hide();
+        if(_isGameOn == true){
+            gameOver("");
+        }
     });
 
     $('#regNav').click(function () {
@@ -85,6 +88,9 @@ $(document).ready(function () {
         $("#game").hide();
         $("#settings").hide();
         $("#play").hide();
+        if(_isGameOn == true){
+            gameOver("");
+        }
     });
 
     $('#loginNav').click(function () {
@@ -94,6 +100,9 @@ $(document).ready(function () {
         $("#game").hide();
         $("#settings").hide();
         $("#play").hide();
+        if(_isGameOn == true){
+            gameOver("");
+        }
     });
 
     $('#aboutNav').click(function () {
@@ -116,6 +125,9 @@ $(document).ready(function () {
         $("#game").hide();
         $("#settings").hide();
         $("#play").hide();
+        if(_isGameOn == true){
+            gameOver("");
+        }
     });
 
     $('#main').click(function () {
@@ -128,6 +140,9 @@ $(document).ready(function () {
         $("#loginDiv").show();
         document.getElementById("logPassword").value = "";
         document.getElementById("logName").value = "";
+        if(_isGameOn == true){
+            gameOver("");
+        }
     })
     /*#endregion DivFunctions*/
 
