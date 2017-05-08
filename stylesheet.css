@@ -335,10 +335,6 @@ input {
     width: 22px;
 }
 
-
-#form{
-
-}
 .data {
     margin-bottom: 8px;
     font-size: 18px;
@@ -351,7 +347,6 @@ input {
 }
 
 /*#endregion Register_Style*/
-
 
 #main {
     min-height: 400px;
@@ -471,6 +466,15 @@ footer{
         transform: scaleX(-1);
         filter: FlipH;
         -ms-filter: "FlipH";
+}
+
+.foo{
+margin:0;
+display:inline;
+font-weight:none;
+}
+.email{
+color: white;
 }
 
 

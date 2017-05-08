@@ -273,7 +273,7 @@ window.addEventListener("keydown", function(e) {
     $(function() {
 
         //populate our years select box
-        for (i = new Date().getFullYear(); i > 1917; i--){
+        for (i = 2014; i > 1917; i--){
             $('#years').append($('<option />').val(i).html(i));
         }
         //populate our months select box
