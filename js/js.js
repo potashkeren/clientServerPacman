@@ -52,6 +52,10 @@ function closeNav() {
 function dialogdown() {
     document.getElementById("Dialog").close();
 }
+function gameOverdown() {
+    document.getElementById("Game Over").close();
+}
+
 function dialogRGdown() {
     document.getElementById("Dialog_rg").close();
     $('#regDiv').hide();

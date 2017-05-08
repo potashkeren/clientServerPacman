@@ -90,6 +90,15 @@
     letter-spacing: 1px;
     font-size: 20px;
 }
+
+.gameover{
+    background-image: url("img/bg2.gif");
+    color:white;
+    font-family: David;
+    letter-spacing: 1px;
+    font-size: 20px;
+}
+
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}

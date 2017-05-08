@@ -459,7 +459,6 @@ $("#settings").show();
 $("#play").hide();
 }
 
-
 function checkScores(){
     if(_board[shape.i][shape.j]==3)
     {
@@ -503,12 +502,21 @@ function gameOver(reason){
      _isGameOn = false;
      _audio.pause();
     if(reason == "coins"){
-        window.alert("Game completed");
+        var modal = document.getElementById("Game Over");
+        modal.text("You Won!");
+        modal.showModal();
     } else if(reason == "gameover"){
-            window.alert("GAME OVER");
+         var modal = document.getElementById("Game Over");
+         modal.text("You Lost! \n Your score is: " + score);
+         modal.showModal();
     } else if (reason == ("time is up")){
-       window.alert("time is up");
-    }
+       var modal = document.getElementById("Game Over");
+       if(score < 150)
+             modal.text("You can do better. \n Your score is: "+ score);
+       else
+             modal.text("We have a winner. \n Your score is: "+ score);
+       modal.showModal();
+     }
 
     //remove heartes from the hearts div
     var heartDiv = document.getElementById("lives");
