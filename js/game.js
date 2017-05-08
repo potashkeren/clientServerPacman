@@ -1,7 +1,7 @@
 /* Human readable keyCode index */
 var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
 
-var counter;
+var counter, _ghostMeet;
 var position  = null,
         direction = null,
         eaten     = null,
@@ -88,6 +88,7 @@ function reStart(){
 }
 
 function initBoard(){
+_ghostMeet = false;
 counter = setInterval(timer, 1000);
 _pacman_remain = 2;
  _audio = new Audio('./data/StarWars.mp3');
@@ -220,80 +221,6 @@ function createGhosts(){
     }
 }
 
-function DrawGhosts(){
-    for(var i = 0; i < numOfGhosts; i++)
-    {
-        var ghost = ghosts[i];
-            var imageObj = new Image();
-            imageObj.width = "20px";
-            imageObj.height = "20px";
-            imageObj.src = ghost.imagePath;
-            contex.drawImage(imageObj, ghost.x*20+10 - ghost.radius, ghost.y*20+10 -ghost.radius , 20, 20);
-    }
-}
-
-function DrawPacman() {
-    var center = new Object();
-    center.x = shape.i*20 + 10;// * 50 + 30;
-    center.y = shape.j*20 + 10;// * 50 + 30;
-
-    if(_lastPressedKey == "left"){
-            //pacman
-            contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.85 * Math.PI, 1.15 * Math.PI, true); // half circle
-            contex.lineTo(center.x, center.y);
-            contex.fillStyle = "yellow"; //color
-            contex.fill();
-
-            //eye
-            contex.beginPath();
-            contex.arc(center.x - 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
-            contex.fillStyle = "black"; //color
-            contex.fill();
-
-    } else if(_lastPressedKey == "up"){
-               //pacman
-                contex.beginPath();
-                contex.arc(center.x, center.y, 10, 1.4 * Math.PI, 1.65 * Math.PI, true); // half circle
-                contex.lineTo(center.x, center.y);
-                contex.fillStyle = "yellow"; //color
-                contex.fill();
-
-                //eye
-                contex.beginPath();
-                contex.arc(center.x + 3.6666 , center.y - 2 ,  1.5, 0, 2 * Math.PI, false); // circle
-                contex.fillStyle = "black"; //color
-                contex.fill();
-
-    } else if(_lastPressedKey == "down"){
-            //pacman
-            contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.4 * Math.PI, 0.65 * Math.PI, true); // half circle
-            contex.lineTo(center.x, center.y);
-            contex.fillStyle = "yellow"; //color
-            contex.fill();
-
-            //eye
-            contex.beginPath();
-            contex.arc(center.x + 3.6666 , center.y + 2 ,  1.5, 0, 2 * Math.PI, true); // circle
-            contex.fillStyle = "black"; //color
-            contex.fill();
-    }else {
-                //pacman
-                contex.beginPath();
-                contex.arc(center.x, center.y, 10, 0.15 * Math.PI, 1.85 * Math.PI, false); // half circle
-                contex.lineTo(center.x, center.y);
-                contex.fillStyle = "yellow"; //color
-                contex.fill();
-
-                //eye
-                contex.beginPath();
-                contex.arc(center.x + 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
-                contex.fillStyle = "black"; //color
-                contex.fill();
-            }
-}
-
 function moveGhosts(){
     _ghostMoveModolu = _ghostMoveModolu + 1 ;
 
@@ -308,6 +235,19 @@ function moveGhosts(){
                 g.x = bestMove.x;
                 g.y = bestMove.y;
         }
+    }
+}
+
+function getRandomDirection(){
+    var i = Math.random();
+    if(i<0.25){
+        return "up";
+    }else if(i<0.5){
+        return "down";
+    }else if(i<0.75){
+        return "right";
+    }else{
+        return "left";
     }
 }
 
@@ -368,19 +308,6 @@ function findRandomEmptyCell(_board){
     }
     return [i,j];
  }
-
-function getRandomDirection(){
-    var i = Math.random();
-    if(i<0.25){
-        return "up";
-    }else if(i<0.5){
-        return "down";
-    }else if(i<0.75){
-        return "right";
-    }else{
-        return "left";
-    }
-}
 
 function GetKeyPressed() {
     if (keysDown[38]) {
@@ -498,6 +425,26 @@ function checkPacmanStarMeet(){
     }
 }
 
+function checkPacmanGhostMeet(){
+    for(var i=0; i<numOfGhosts; i++){
+
+    var ghost = ghosts[i];
+    if(ghost.x == shape.i && ghost.y == shape.j){
+        ghostMeet = true;
+            if(_pacman_remain == 0){
+                gameOver("gameover");
+            }
+            else{
+                _pacman_remain--;
+                var heartDiv = document.getElementById("lives");
+                heartDiv.removeChild(heartDiv.lastChild);
+                pacmanStrike();
+            }
+        }
+    }
+    ghostMeet = false;
+}
+
 function gameOver(reason){
      window.clearInterval(interval);
      window.clearInterval(counter);
@@ -534,25 +481,6 @@ function timer(){
      return;
   }
   $("#lblTime").text(time);
-}
-
-function checkPacmanGhostMeet(){
-
-    for(var i=0; i<numOfGhosts; i++){
-
-    var ghost = ghosts[i];
-    if(ghost.x == shape.i && ghost.y == shape.j){
-            if(_pacman_remain == 0){
-                gameOver("gameover");
-            }
-            else{
-                _pacman_remain--;
-                var heartDiv = document.getElementById("lives");
-                heartDiv.removeChild(heartDiv.lastChild);
-                pacmanStrike();
-            }
-        }
-    }
 }
 
 function meetGhost(){
@@ -647,6 +575,82 @@ function DrawPoints(){
 
                 }
         }
+    }
+}
+
+function DrawPacman() {
+    var center = new Object();
+    center.x = shape.i*20 + 10;// * 50 + 30;
+    center.y = shape.j*20 + 10;// * 50 + 30;
+
+    if(_lastPressedKey == "left"){
+            //pacman
+            contex.beginPath();
+            contex.arc(center.x, center.y, 10, 0.85 * Math.PI, 1.15 * Math.PI, true); // half circle
+            contex.lineTo(center.x, center.y);
+            contex.fillStyle = "yellow"; //color
+            contex.fill();
+
+            //eye
+            contex.beginPath();
+            contex.arc(center.x - 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
+            contex.fillStyle = "black"; //color
+            contex.fill();
+
+    } else if(_lastPressedKey == "up"){
+               //pacman
+                contex.beginPath();
+                contex.arc(center.x, center.y, 10, 1.4 * Math.PI, 1.65 * Math.PI, true); // half circle
+                contex.lineTo(center.x, center.y);
+                contex.fillStyle = "yellow"; //color
+                contex.fill();
+
+                //eye
+                contex.beginPath();
+                contex.arc(center.x + 3.6666 , center.y - 2 ,  1.5, 0, 2 * Math.PI, false); // circle
+                contex.fillStyle = "black"; //color
+                contex.fill();
+
+    } else if(_lastPressedKey == "down"){
+            //pacman
+            contex.beginPath();
+            contex.arc(center.x, center.y, 10, 0.4 * Math.PI, 0.65 * Math.PI, true); // half circle
+            contex.lineTo(center.x, center.y);
+            contex.fillStyle = "yellow"; //color
+            contex.fill();
+
+            //eye
+            contex.beginPath();
+            contex.arc(center.x + 3.6666 , center.y + 2 ,  1.5, 0, 2 * Math.PI, true); // circle
+            contex.fillStyle = "black"; //color
+            contex.fill();
+    }else {
+                //pacman
+                contex.beginPath();
+                contex.arc(center.x, center.y, 10, 0.15 * Math.PI, 1.85 * Math.PI, false); // half circle
+                contex.lineTo(center.x, center.y);
+                contex.fillStyle = "yellow"; //color
+                contex.fill();
+
+                //eye
+                contex.beginPath();
+                contex.arc(center.x + 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
+                contex.fillStyle = "black"; //color
+                contex.fill();
+            }
+}
+
+function DrawGhosts(){
+    for(var i = 0; i < numOfGhosts; i++)
+    {
+        var ghost = ghosts[i];
+            var imageObj = new Image();
+            imageObj.width = "20px";
+            imageObj.height = "20px";
+            imageObj.src = ghost.imagePath;
+            contex.drawImage(imageObj, ghost.x*20+10 - ghost.radius, ghost.y*20+10 -ghost.radius , 20, 20);
+       if(ghost.x == shape.i && ghost.y == shape.j && _ghostMeet == false)
+            checkPacmanGhostMeet();
     }
 }
 
