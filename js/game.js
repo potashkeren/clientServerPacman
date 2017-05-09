@@ -492,7 +492,7 @@ function meetGhost(){
       shape.j = emptyCell[1];
       DrawPacman();
       createGhosts();
-
+       _ghostMeet = false;
       keysDown = {};
       addEventListener("keydown", function (e) {
           keysDown[e.keyCode] = true;
