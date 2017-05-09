@@ -449,7 +449,7 @@ footer{
  }
 
 #user_board{
-    margin: 1% 2% ;
+    margin: 0 2% ;
     background: rgba(22, 18, 31, 0.52);
     width: 15%;
     font-family: 'Shrikhand', cursive;

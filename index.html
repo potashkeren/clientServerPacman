@@ -6,6 +6,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
     <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/js.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
+
 
 </head>
 <body>
@@ -152,12 +155,12 @@
             </div>
             <p class="setting_header" style="padding-bottom:0;">Enter num of coins:</p>
             <p class="setting_valid">min 50, max 90</p>
-            <input id="selectCoins" type="number"  value="50" >
+            <input id="selectCoins" type="number" min="50" max="90" value="50" >
             <br/>
             <p class="error" id="errorCoins" style="font-size:18px; margin-top:9px;margin-bottom: 0"></p>
             <p class="setting_header" style="padding-bottom:0;">Enter game time (sec):</p>
             <p class="setting_valid">min 60 seconds</p>
-            <input  id="selectTime" type="number" value="60">
+            <input  id="selectTime" type="number" min="60" value="60">
             <br/>
             <p class="error" id="errorTime" style="font-size:18px; margin-top:9px;margin-bottom: 0"></p>
             <br/>
@@ -201,9 +204,6 @@
     <br/>
     <p class="foo">© Copyright 2017</p>
 </footer>
-
-<script type="text/javascript" src="js/js.js"></script>
-<script type="text/javascript" src="js/game.js"></script>
 
 
 
