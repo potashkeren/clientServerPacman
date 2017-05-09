@@ -34,7 +34,7 @@ var _board;
 var score;
 var pac_color = "yellow";
 
-var interval, _audio;
+var interval, _audio, _sound;
 var state   = WAITING;
 
 /* Human readable keyCode index */
@@ -88,6 +88,8 @@ function reStart(){
 }
 
 function initBoard(){
+if(_sound != null)
+    _sound.pause();
 _ghostMeet = false;
 counter = setInterval(timer, 1000);
 _pacman_remain = 2;
@@ -404,11 +406,11 @@ function checkScores(){
            score = score + 25;
            _eatenCoins++;
      }
-      else if(_board[shape.i][shape.j]==8){
+     else if(_board[shape.i][shape.j]==8){
             time = time + 30;
-      }
-    else if(_board[shape.i][shape.j]==6){
-          _pacman_remain++; // add life
+     }
+     else if(_board[shape.i][shape.j]==6){
+            _pacman_remain++; // add life
             var elem = document.createElement("img"); // draw life
             elem.src = 'img/life.png';
             elem.setAttribute("height", "30");
@@ -451,16 +453,26 @@ function gameOver(reason){
      _isGameOn = false;
      _audio.pause();
     if(reason == "coins"){
+        _sound = new Audio('./data/win.mp3');
+        _sound.play();
        $("#dialogText").text("You Won! \n Your score is: " + score);
         document.getElementById("Game Over").showModal();
     } else if(reason == "gameover"){
          $("#dialogText").text("You Lost! \n Your score is: " + score);
          document.getElementById("Game Over").showModal();
+         _sound = new Audio('./data/gameOver.mp3');
+         _sound.play();
     } else if (reason == ("time is up")){
-       if(score < 150)
-          $("#dialogText").text("You can do better. \n Your score is: "+ score);
-       else
-           $("#dialogText").text("We have a winner. \n Your score is: "+ score);
+       if(score < 150){
+         $("#dialogText").text("You can do better. \n Your score is: "+ score);
+        _sound = new Audio('./data/gameOver.mp3');
+        _sound.play();
+       }
+       else{
+          $("#dialogText").text("We have a winner. \n Your score is: "+ score);
+          _sound = new Audio('./data/win.mp3');
+          _sound.play();
+       }
 
       document.getElementById("Game Over").showModal();
      }
@@ -484,15 +496,15 @@ function timer(){
 }
 
 function meetGhost(){
-       document.getElementById("Strike").close();
-
+      _sound.pause();
+      _audio.play();
+      document.getElementById("Strike").close();
       var emptyCell = findRandomEmptyCell(_board);
       _board[emptyCell[0]][emptyCell[1]] = 2;
       shape.i = emptyCell[0];
       shape.j = emptyCell[1];
       DrawPacman();
       createGhosts();
-       _ghostMeet = false;
       keysDown = {};
       addEventListener("keydown", function (e) {
           keysDown[e.keyCode] = true;
@@ -501,12 +513,17 @@ function meetGhost(){
           keysDown[e.keyCode] = false;
       }, false);
        interval=setInterval(UpdatePosition, 80);
+       _ghostMeet = false;
 }
 
 function pacmanStrike(){
-       window.clearInterval(interval);
+   window.clearInterval(interval);
 
-  var  livesLeft = _pacman_remain +1;
+    _audio.pause();
+    _sound = new Audio('./data/whawha.mp3');
+    _sound.play();
+
+   var  livesLeft = _pacman_remain +1;
    $("#strikeText").text("You met a ghost! \n you have " + livesLeft + " lives left");
    document.getElementById("Strike").showModal();
 }
