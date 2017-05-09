@@ -134,8 +134,8 @@ _pacman_remain = 2;
             for(var i =0 ; i<3; i++){
                var elem = document.createElement("img");
                elem.src = 'img/life.png';
-               elem.setAttribute("height", "30");
-               elem.setAttribute("width", "30");
+               elem.setAttribute("height", "28");
+               elem.setAttribute("width", "28");
                var livesDive = document.getElementById("lives");
                livesDive.appendChild(elem);
                livesDive.appendChild(elem);

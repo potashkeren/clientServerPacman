@@ -119,6 +119,7 @@ window.addEventListener("keydown", function(e) {
     });
 
     $('#loginNav').click(function () {
+        $("#errorUser").text("");
         $('#welcomeDiv').hide();
         $('#regDiv').hide();
         $('#loginDiv').show();
@@ -144,6 +145,7 @@ window.addEventListener("keydown", function(e) {
     });
 
     $('#logDiv1').click(function () {
+         $("#errorUser").text("");
         $('#welcomeDiv').hide();
         $('#regDiv').hide();
         $('#loginDiv').show();
@@ -160,6 +162,7 @@ window.addEventListener("keydown", function(e) {
     });
 
     $('#logout').click(function () {
+        $("#errorUser").text("");
         _currentUser="";
         $("#game").hide();
         $("#loginDiv").show();
