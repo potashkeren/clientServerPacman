@@ -430,7 +430,7 @@ function checkPacmanGhostMeet(){
 
     var ghost = ghosts[i];
     if(ghost.x == shape.i && ghost.y == shape.j){
-        ghostMeet = true;
+        _ghostMeet = true;
             if(_pacman_remain == 0){
                 gameOver("gameover");
             }
