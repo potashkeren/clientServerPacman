@@ -20,7 +20,7 @@ var ghosts = [];
 var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }];
 var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }];
 
-var starFish;
+var starFish, _timeLeft;
 
 var _ghostMoveModolu = 0;
 var _eatenCoins;
@@ -517,11 +517,15 @@ function meetGhost(){
           keysDown[e.keyCode] = false;
       }, false);
        interval=setInterval(UpdatePosition, 80);
+       time = _timeLeft;
+       counter=setInterval(timer, 1000);
        _ghostMeet = false;
 }
 
 function pacmanStrike(){
    window.clearInterval(interval);
+   _timeLeft = time;
+   window.clearInterval(counter);
 
     _audio.pause();
     _sound = new Audio('./data/whawha.mp3');
