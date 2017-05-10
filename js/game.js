@@ -167,6 +167,9 @@ function moveStarfish(){
                 }
               }
         }
+        if(starFish.x == shape.i && starFish.y == shape.j){
+                checkPacmanStarMeet();
+        }
      }
 }
 
