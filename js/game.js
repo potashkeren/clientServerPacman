@@ -95,7 +95,7 @@ counter = setInterval(timer, 1000);
 _pacman_remain = 2;
  _audio = new Audio('./data/StarWars.mp3');
  _audio.play();
- _audio.volume = 0.15;
+ _audio.volume = 0.5;
   _board = [
                            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                          	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
