@@ -33,6 +33,7 @@
     padding: 10px 20px 10px 20px;
     border-bottom-right-radius: 5px;
     font-family: 'Shrikhand', cursive;
+    width:10%;
 
 }
 #span:hover{
@@ -137,9 +138,9 @@
 
 #logo{
     padding-top: 5%;
-    padding-left: 15%;
-    padding-right: 20%;
-    vertical-align: middle;
+    margin-left:16%
+
+
 }
 
 /*#endregion Welcome_Style*/
