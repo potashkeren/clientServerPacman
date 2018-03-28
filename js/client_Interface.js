@@ -172,6 +172,15 @@ window.addEventListener("keydown", function(e) {
             gameOver("");
         }
     })
+
+    $('#startQuick').click(function () {
+        $("#loginDiv").hide();
+        $("#game").show();
+        $("#settings").show();
+        $("#play").hide();
+        $('#welcomeDiv').hide();
+        $('#regDiv').hide();
+    });
     /*#endregion DivFunctions*/
 
     /*#region Validation*/

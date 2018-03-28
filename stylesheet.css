@@ -23,7 +23,7 @@
 /*#region Menu_Style*/
 
 #span {
-    font-size:35px;
+    font-size:23px;
     cursor:pointer;
     float: left;
     z-index: 1;
@@ -31,7 +31,7 @@
     color: #ff7885;
     background-color: #f1f1f1;
     padding: 10px 20px 10px 20px;
-    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 3px;
     font-family: 'Shrikhand', cursive;
     width:10%;
 
@@ -481,14 +481,14 @@ footer{
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
-        filter: FlipH;
+        filter: flipH();
         -ms-filter: "FlipH";
 }
 
 .foo{
 margin:0;
 display:inline;
-font-weight:none;
+font-weight: unset;
 }
 .email{
 color: white;

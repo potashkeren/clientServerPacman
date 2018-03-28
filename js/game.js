@@ -15,7 +15,6 @@ keyMap[KEY.ARROW_UP]    = UP;
 keyMap[KEY.ARROW_RIGHT] = RIGHT;
 keyMap[KEY.ARROW_DOWN]  = DOWN;
 
-
 var ghosts = [];
 var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }];
 var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }];
@@ -27,15 +26,10 @@ var _eatenCoins;
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
 var shape=new Object();
-
 var _lastPressedKey;
-
 var _board;
 var score;
-var pac_color = "yellow";
-
 var interval, _audio, _sound;
-var state   = WAITING;
 
 /* Human readable keyCode index */
 var NONE        = 4,
@@ -55,48 +49,40 @@ var _pacman_remain;
 var contex = canvas.getContext("2d");
 
 function Start() {
-                _isGameOn = true;
-                score = 0;
-                 _eatenCoins=0;
-                var cnt = 100;
-                time = $("#selectTime").val();
-                initBoard();
+    _isGameOn = true;
+    score = 0;
+     _eatenCoins=0;
+    var cnt = 100;
+    time = $("#selectTime").val();
+    initBoard();
 
-                ///place the pacman in randome cell
-                var emptyCell = findRandomEmptyCell(_board);
-                _board[emptyCell[0]][emptyCell[1]] = 2;
-                shape.i = emptyCell[0];
-                shape.j = emptyCell[1];
+    ///place the pacman in randome cell
+    var emptyCell = findRandomEmptyCell(_board);
+    _board[emptyCell[0]][emptyCell[1]] = 2;
+    shape.i = emptyCell[0];
+    shape.j = emptyCell[1];
 
-               fillPoints();
-               createGhosts();
+    fillPoints();
+    createGhosts();
 
+    keysDown = {};
+    addEventListener("keydown", function (e) {
+        keysDown[e.keyCode] = true;
+    }, false);
+    addEventListener("keyup", function (e) {
+        keysDown[e.keyCode] = false;
+    }, false);
+     interval=setInterval(UpdatePosition, 90);
 
-                keysDown = {};
-                addEventListener("keydown", function (e) {
-                    keysDown[e.keyCode] = true;
-                }, false);
-                addEventListener("keyup", function (e) {
-                    keysDown[e.keyCode] = false;
-                }, false);
-                 interval=setInterval(UpdatePosition, 90);
+     clientStart(time,_isGameOn)
             }
 
-function reStart(){
-        gameOver("");
-        Start();
-}
-
 function initBoard(){
-if(_sound != null)
-    _sound.pause();
-_ghostMeet = false;
-counter = setInterval(timer, 1000);
-_pacman_remain = 2;
- _audio = new Audio('./data/StarWars.mp3');
- _audio.play();
- _audio.volume = 0.5;
-  _board = [
+    counter = setInterval(timer, 1000);
+
+    _ghostMeet = false;
+    _pacman_remain = 2;
+    _board = [
                            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                          	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                          	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
@@ -121,27 +107,16 @@ _pacman_remain = 2;
                          	[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
                          ];
-  starFish = {
-                    x: 1,
-                    y : 21,
-                    prevX: 1,
-                    prevY: 21,
-                    boardX: 30 ,
-                    boardY: 430,
-                    img: "./img/starfish.png",
-                    isAlive: true,
-            };
-            //reset life
-            for(var i =0 ; i<3; i++){
-               var elem = document.createElement("img");
-               elem.src = 'img/life.png';
-               elem.setAttribute("height", "28");
-               elem.setAttribute("width", "28");
-               var livesDive = document.getElementById("lives");
-               livesDive.appendChild(elem);
-               livesDive.appendChild(elem);
-               livesDive.appendChild(elem);
-            }
+    starFish = {
+    x: 1,
+    y : 21,
+    prevX: 1,
+    prevY: 21,
+    boardX: 30 ,
+    boardY: 430,
+    img: "./img/starfish.png",
+    isAlive: true,
+  };
 }
 
 function moveStarfish(){
@@ -174,20 +149,6 @@ function moveStarfish(){
      }
 }
 
-function drawStarfish(){
-    if(starFish.isAlive == true)
-    {
-        var locations = getPossibleMoves(starFish.x,starFish.y);
-        var rnd = Math.floor((Math.random() * locations.length));
-
-        var imageObj = new Image();
-                   imageObj.width = "20px";
-                   imageObj.height = "20px";
-                   imageObj.src = starFish.img;
-                   contex.drawImage(imageObj, starFish.x*20+10 - 10, starFish.y*20+10 - 10 , 20, 20);
-     }
-}
-
 function fillPoints(){
    //fill Points
    var food_remain = coins;
@@ -215,17 +176,6 @@ function fillPoints(){
    _board[emptyCell2[0]][emptyCell2[1]] = 6; // Extra Life
 }
 
-function createGhosts(){
-    ghosts = [];
-    for (var i = 0; i < numOfGhosts; i++)
-    {
-        var ghost = {x : boardCorners[i].x, y : boardCorners[i].y, prevX:  boardCorners[i].x, prevY: boardCorners[i].y,
-        radius: 10,  startingX : canvasCorners[i].x, startingY : canvasCorners[i].y};
-
-        ghost.imagePath = ghostsPictures[i];
-        ghosts.push(ghost);
-    }
-}
 
 function moveGhosts(){
     _ghostMoveModolu = _ghostMoveModolu + 1 ;
@@ -242,6 +192,7 @@ function moveGhosts(){
                 g.y = bestMove.y;
         }
     }
+    clientMoveGhost(ghosts);
 }
 
 function getRandomDirection(){
@@ -257,42 +208,9 @@ function getRandomDirection(){
     }
 }
 
-function getBestMoveForGhost(ghost){
-  var locations = getPossibleMoves(ghost.x, ghost.y);
-  var lastMax = 1000000000000000000000000;
-  var result;
-     if(locations.length == 1) return {x: locations[0].x,y: locations[0].y};
-  for(var i=0; i < 4; i++){
-    if(locations[i] != null){
-            var manhaten = Math.sqrt(Math.pow(locations[i].x-shape.i,2)+ Math.pow(locations[i].y-shape.j,2));
-            if(manhaten < lastMax && (ghost.prevY != locations[i].y || ghost.prevX != locations[i].x )){
-                    lastMax = manhaten;
-                    result = {x: locations[i].x,y: locations[i].y};
-            }
-    }
-  }
-  return result;
-}
 
-function getPossibleMoves( x,  y){
-        var locations = [];
-        if(_board[x-1][y] != 1){
-             var place = {x: x-1, y: y};
-            locations.push(place);
-        }
-        if(_board[x+1][y]  != 1){
-             var place = {x: x+1, y: y};
-            locations.push(place);
-        }
-        if(_board[x][y-1] != 1){
-             var place = {x: x, y: y-1};
-            locations.push(place);
-        } if(_board[x][y+1] != 1){
-             var place = {x: x, y: y+1};
-             locations.push(place);
-        }
-    return locations;
-}
+
+
 
 function keyDown(e) {
 if (typeof keyMap[e.keyCode] !== "undefined") {
@@ -375,23 +293,13 @@ function UpdatePosition() {
     }
     else
     {
-            DrawBoard();
-            DrawPacman();
-            checkPacmanGhostMeet();
-            checkPacmanStarMeet();
-            moveGhosts();
-            moveStarfish();
-            DrawPoints();
-            DrawGhosts();
-            drawStarfish();
 
+        checkPacmanGhostMeet();
+        checkPacmanStarMeet();
+        moveGhosts();
+        moveStarfish();
+        clientDraw()
      }
-}
-
-function backToSettings(){
-gameOver("");
-$("#settings").show();
-$("#play").hide();
 }
 
 function checkScores(){
@@ -415,12 +323,7 @@ function checkScores(){
      }
      else if(_board[shape.i][shape.j]==6){
             _pacman_remain++; // add life
-            var elem = document.createElement("img"); // draw life
-            elem.src = 'img/life.png';
-            elem.setAttribute("height", "30");
-            elem.setAttribute("width", "30");
-            var livesDive = document.getElementById("lives");
-            livesDive.appendChild(elem);
+            clientAddLife();
     }
 }
 
@@ -455,54 +358,10 @@ function gameOver(reason){
      window.clearInterval(interval);
      window.clearInterval(counter);
      _isGameOn = false;
-     _audio.pause();
-    if(reason == "coins"){
-        _sound = new Audio('./data/win.mp3');
-        _sound.play();
-       $("#dialogText").text("You Won! \n Your score is: " + score);
-        document.getElementById("Game Over").showModal();
-    } else if(reason == "gameover"){
-         $("#dialogText").text("You Lost! \n Your score is: " + score);
-         document.getElementById("Game Over").showModal();
-         _sound = new Audio('./data/gameOver.mp3');
-         _sound.play();
-    } else if (reason == ("time is up")){
-       if(score < 150){
-         $("#dialogText").text("You can do better. \n Your score is: "+ score);
-        _sound = new Audio('./data/gameOver.mp3');
-        _sound.play();
-       }
-       else{
-          $("#dialogText").text("We have a winner. \n Your score is: "+ score);
-          _sound = new Audio('./data/win.mp3');
-          _sound.play();
-       }
-
-      document.getElementById("Game Over").showModal();
-     }
-
-    //remove heartes from the hearts div
-    var heartDiv = document.getElementById("lives");
-    while (heartDiv.hasChildNodes()) {
-        heartDiv.removeChild(heartDiv.lastChild);
-    }
-}
-
-function timer(){
-  time=time-1;
-  if (time == 0)
-  {
-     clearInterval(counter);
-     gameOver("time is up");
-     return;
-  }
-  $("#lblTime").text(time);
+     clientGameOver(reason,false);
 }
 
 function meetGhost(){
-      _sound.pause();
-      _audio.play();
-      document.getElementById("Strike").close();
       var emptyCell = findRandomEmptyCell(_board);
       _board[emptyCell[0]][emptyCell[1]] = 2;
       shape.i = emptyCell[0];
@@ -524,158 +383,78 @@ function meetGhost(){
 
 function pacmanStrike(){
    window.clearInterval(interval);
-   _timeLeft = time;
    window.clearInterval(counter);
-
-    _audio.pause();
-    _sound = new Audio('./data/whawha.mp3');
-    _sound.play();
+   _timeLeft = time;
 
    var  livesLeft = _pacman_remain +1;
-   $("#strikeText").text("You met a ghost! \n you have " + livesLeft + " lives left");
-   document.getElementById("Strike").showModal();
+    clientPacmanStrike(livesLeft);
 }
 
-function DrawBoard(){
-contex.clearRect(0, 0, canvas.width, canvas.height);
- for (var row = 0; row < _board.length; row++)
+
+// ------------ fixed ------------ //
+
+function timer(){
+    time=time-1;
+    if (time == 0)
     {
-        for (var col=0; col < _board[row].length; col++)
-        {
-            if(_board[row][col]==1)
-            {
-                contex.fillStyle="darkBlue";
-                contex.fillRect(row*20,col*20,20,20);
-            } else{
-                contex.fillStyle="black";
-                contex.fillRect(row*20,col*20,20,20);
+        clearInterval(counter);
+        gameOver("time is up");
+        return;
+    }
+    clientGetTime(time);
+}
+
+function getPossibleMoves( x,  y){
+    var locations = [];
+    if(_board[x-1][y] != 1){
+        var place = {x: x-1, y: y};
+        locations.push(place);
+    }
+    if(_board[x+1][y]  != 1){
+        var place = {x: x+1, y: y};
+        locations.push(place);
+    }
+    if(_board[x][y-1] != 1){
+        var place = {x: x, y: y-1};
+        locations.push(place);
+    } if(_board[x][y+1] != 1){
+        var place = {x: x, y: y+1};
+        locations.push(place);
+    }
+    return locations;
+}
+
+function getBestMoveForGhost(ghost){
+    var locations = getPossibleMoves(ghost.x, ghost.y);
+    var lastMax = 1000000000000000000000000;
+    var result;
+    if(locations.length == 1) return {x: locations[0].x,y: locations[0].y};
+    for(var i=0; i < 4; i++){
+        if(locations[i] != null){
+            var manhaten = Math.sqrt(Math.pow(locations[i].x-shape.i,2)+ Math.pow(locations[i].y-shape.j,2));
+            if(manhaten < lastMax && (ghost.prevY != locations[i].y || ghost.prevX != locations[i].x )){
+                lastMax = manhaten;
+                result = {x: locations[i].x,y: locations[i].y};
             }
         }
     }
+    return result;
 }
 
-function DrawPoints(){
- for (var row = 0; row < _board.length; row++)
+function createGhosts(){
+    ghosts = [];
+    for (var i = 0; i < numOfGhosts; i++)
     {
-        for (var col=0; col < _board[row].length; col++)
-        {
-            if(_board[row][col]==3) {
+        var ghost ={x : boardCorners[i].x,
+            y : boardCorners[i].y,
+            prevX:  boardCorners[i].x,
+            prevY: boardCorners[i].y,
+            radius: 10,
+            startingX : canvasCorners[i].x,
+            startingY : canvasCorners[i].y};
 
-             var imageObj = new Image();
-                        imageObj.width = "20px";
-                        imageObj.height = "20px";
-                        imageObj.src = "./img/5.png";
-                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
-            }
-             else if(_board[row][col]==4) {
-                      var imageObj = new Image();
-                        imageObj.width = "20px";
-                        imageObj.height = "20px";
-                        imageObj.src = "./img/15.png";
-                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
-
-                        }
-               else if(_board[row][col]==5) {
-                       var imageObj = new Image();
-                        imageObj.width = "20px";
-                        imageObj.height = "20px";
-                        imageObj.src = "./img/25.png";
-                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
-
-                }
-               else if(_board[row][col]==8) {
-                       var imageObj = new Image();
-                        imageObj.width = "20px";
-                        imageObj.height = "20px";
-                        imageObj.src = "./img/time.png";
-                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
-
-                }
-               else if(_board[row][col]==6) {
-                       var imageObj = new Image();
-                        imageObj.width = "20px";
-                        imageObj.height = "20px";
-                        imageObj.src = "./img/life.png";
-                        contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
-
-                }
-        }
+        ghost.imagePath = ghostsPictures[i];
+        ghosts.push(ghost);
     }
+    clientGetGhost(ghosts,numOfGhosts);
 }
-
-function DrawPacman() {
-    var center = new Object();
-    center.x = shape.i*20 + 10;// * 50 + 30;
-    center.y = shape.j*20 + 10;// * 50 + 30;
-
-    if(_lastPressedKey == "left"){
-            //pacman
-            contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.85 * Math.PI, 1.15 * Math.PI, true); // half circle
-            contex.lineTo(center.x, center.y);
-            contex.fillStyle = "yellow"; //color
-            contex.fill();
-
-            //eye
-            contex.beginPath();
-            contex.arc(center.x - 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
-            contex.fillStyle = "black"; //color
-            contex.fill();
-
-    } else if(_lastPressedKey == "up"){
-               //pacman
-                contex.beginPath();
-                contex.arc(center.x, center.y, 10, 1.4 * Math.PI, 1.65 * Math.PI, true); // half circle
-                contex.lineTo(center.x, center.y);
-                contex.fillStyle = "yellow"; //color
-                contex.fill();
-
-                //eye
-                contex.beginPath();
-                contex.arc(center.x + 3.6666 , center.y - 2 ,  1.5, 0, 2 * Math.PI, false); // circle
-                contex.fillStyle = "black"; //color
-                contex.fill();
-
-    } else if(_lastPressedKey == "down"){
-            //pacman
-            contex.beginPath();
-            contex.arc(center.x, center.y, 10, 0.4 * Math.PI, 0.65 * Math.PI, true); // half circle
-            contex.lineTo(center.x, center.y);
-            contex.fillStyle = "yellow"; //color
-            contex.fill();
-
-            //eye
-            contex.beginPath();
-            contex.arc(center.x + 3.6666 , center.y + 2 ,  1.5, 0, 2 * Math.PI, true); // circle
-            contex.fillStyle = "black"; //color
-            contex.fill();
-    }else {
-                //pacman
-                contex.beginPath();
-                contex.arc(center.x, center.y, 10, 0.15 * Math.PI, 1.85 * Math.PI, false); // half circle
-                contex.lineTo(center.x, center.y);
-                contex.fillStyle = "yellow"; //color
-                contex.fill();
-
-                //eye
-                contex.beginPath();
-                contex.arc(center.x + 1.6666 , center.y - 5 ,  1.5, 0, 2 * Math.PI, false); // circle
-                contex.fillStyle = "black"; //color
-                contex.fill();
-            }
-}
-
-function DrawGhosts(){
-    for(var i = 0; i < numOfGhosts; i++)
-    {
-        var ghost = ghosts[i];
-            var imageObj = new Image();
-            imageObj.width = "20px";
-            imageObj.height = "20px";
-            imageObj.src = ghost.imagePath;
-            contex.drawImage(imageObj, ghost.x*20+10 - ghost.radius, ghost.y*20+10 -ghost.radius , 20, 20);
-       if(ghost.x == shape.i && ghost.y == shape.j && _ghostMeet == false)
-            checkPacmanGhostMeet();
-    }
-}
-

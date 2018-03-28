@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/pacman.iml" filepath="$PROJECT_DIR$/pacman.iml" />
-      <module fileurl="file://C:\Users\Keren\IdeaProjects\packman2\.idea\עבודה 2 חדש.iml" filepath="C:\Users\Keren\IdeaProjects\packman2\.idea\עבודה 2 חדש.iml" />
+      <module fileurl="file://$PROJECT_DIR$/clientServerPacman.iml" filepath="$PROJECT_DIR$/clientServerPacman.iml" />
     </modules>
   </component>
 </project>
