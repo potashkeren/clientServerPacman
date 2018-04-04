@@ -5,24 +5,27 @@ var client_isGameOn;
 var client_time;
 var client_ghosts;
 var client_numOfGhosts;
+var client_starFish;
+var client_lastPressedKey;
+var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 
-function clientStart(time,isGameOn) {
-    client_isGameOn = isGameOn;
+function startGame(time,coins,numOfGhost) {
+    client_numOfGhosts = numOfGhost;
+    client_isGameOn = true;
     client_score = 0;
     client_eatenCoins=0;
     client_time=time;
-
-
-    clientInitBoard();
+    clientInitSoundAndLife();
+    Start(client_time,coins,client_numOfGhosts);
 }
 
 function DrawBoard(){
     contex.clearRect(0, 0, canvas.width, canvas.height);
-    for (var row = 0; row < _board.length; row++)
+    for (var row = 0; row < client_board.length; row++)
     {
-        for (var col=0; col < _board[row].length; col++)
+        for (var col=0; col < client_board[row].length; col++)
         {
-            if(_board[row][col]==1)
+            if(client_board[row][col]==1)
             {
                 contex.fillStyle="darkBlue";
                 contex.fillRect(row*20,col*20,20,20);
@@ -35,11 +38,11 @@ function DrawBoard(){
 }
 
 function DrawPoints(){
-    for (var row = 0; row < _board.length; row++)
+    for (var row = 0; row < client_board.length; row++)
     {
-        for (var col=0; col < _board[row].length; col++)
+        for (var col=0; col < client_board[row].length; col++)
         {
-            if(_board[row][col]==3) {
+            if(client_board[row][col]==3) {
 
                 var imageObj = new Image();
                 imageObj.width = "20px";
@@ -47,7 +50,7 @@ function DrawPoints(){
                 imageObj.src = "./img/5.png";
                 contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
             }
-            else if(_board[row][col]==4) {
+            else if(client_board[row][col]==4) {
                 var imageObj = new Image();
                 imageObj.width = "20px";
                 imageObj.height = "20px";
@@ -55,7 +58,7 @@ function DrawPoints(){
                 contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
 
             }
-            else if(_board[row][col]==5) {
+            else if(client_board[row][col]==5) {
                 var imageObj = new Image();
                 imageObj.width = "20px";
                 imageObj.height = "20px";
@@ -63,7 +66,7 @@ function DrawPoints(){
                 contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
 
             }
-            else if(_board[row][col]==8) {
+            else if(client_board[row][col]==8) {
                 var imageObj = new Image();
                 imageObj.width = "20px";
                 imageObj.height = "20px";
@@ -71,7 +74,7 @@ function DrawPoints(){
                 contex.drawImage(imageObj, row*20+10-10, col*20+10-10 , 20, 20);
 
             }
-            else if(_board[row][col]==6) {
+            else if(client_board[row][col]==6) {
                 var imageObj = new Image();
                 imageObj.width = "20px";
                 imageObj.height = "20px";
@@ -85,8 +88,8 @@ function DrawPoints(){
 
 function DrawPacman() {
     var center = new Object();
-    center.x = shape.i*20 + 10;// * 50 + 30;
-    center.y = shape.j*20 + 10;// * 50 + 30;
+    center.x = pacman.i*20 + 10;// * 50 + 30;
+    center.y = pacman.j*20 + 10;// * 50 + 30;
 
     if(_lastPressedKey == "left"){
         //pacman
@@ -154,18 +157,18 @@ function DrawGhosts(){
         imageObj.height = "20px";
         imageObj.src = ghost.imagePath;
         contex.drawImage(imageObj, ghost.x*20+10 - ghost.radius, ghost.y*20+10 -ghost.radius , 20, 20);
-        if(ghost.x == shape.i && ghost.y == shape.j && _ghostMeet == false)
+        if(ghost.x == pacman.i && ghost.y == pacman.j && _ghostMeet == false)
             checkPacmanGhostMeet();
     }
 }
 
 function drawStarfish(){
-    if(starFish.isAlive == true) {
+    if(client_starFish.isAlive == true) {
         var imageObj = new Image();
         imageObj.width = "20px";
         imageObj.height = "20px";
-        imageObj.src = starFish.img;
-        contex.drawImage(imageObj, starFish.x*20+10 - 10, starFish.y*20+10 - 10 , 20, 20);
+        imageObj.src = client_starFish.img;
+        contex.drawImage(imageObj, client_starFish.x*20+10 - 10, client_starFish.y*20+10 - 10 , 20, 20);
     }
 }
 
@@ -225,7 +228,7 @@ function clientGameOver(reason,isGameOn){
     }
 }
 
-function clientInitBoard(){
+function clientInitSoundAndLife(){
     if(_sound != null){
         _sound.pause();}
 
@@ -244,27 +247,63 @@ function clientInitBoard(){
     }
 }
 
-function clientAddLife() {
-    var elem = document.createElement("img"); // draw life
-    elem.src = 'img/life.png';
-    elem.setAttribute("height", "30");
-    elem.setAttribute("width", "30");
-    var livesDive = document.getElementById("lives");
-    livesDive.appendChild(elem);
+function clientCreateBoard(board) {
+    client_board=board;
 }
 
-function clientGetTime(time) {
+function updateTime(time) {
     client_time=time;
     $("#lblTime").text(client_time);
 }
 
-function clientGetGhost(ghost,numOfGhost){
-    client_ghosts = ghost;
-    client_numOfGhosts = numOfGhost;
+function updateScore(score) {
+    client_score=score;
+    $("#lblScore").text(client_score);
 }
 
-function clientMoveGhost(ghost) {
-    client_ghosts=ghost;
+function clientGetGhost(ghost){
+    client_ghosts = ghost;
+    for (var i = 0; i < client_numOfGhosts; i++){
+        client_ghosts[i].imagePath = ghostsPictures[i];
+    }
+}
+
+function updateGhostLocation(ghost_id,x,y) {
+    client_ghosts[ghost_id].x=x;
+    client_ghosts[ghost_id].y=y;
+}
+
+function updateBoard(number,x,y) {
+    client_board[x][y]=number;
+}
+function updateStarFish(x,y) {
+    client_starFish.x = x;
+    client_starFish.y = y;
+}
+
+function updateLife(str) {
+    if(str=="up"){
+        var elem = document.createElement("img"); // draw life
+        elem.src = 'img/life.png';
+        elem.setAttribute("height", "30");
+        elem.setAttribute("width", "30");
+        var livesDive = document.getElementById("lives");
+        livesDive.appendChild(elem);
+    }
+    if (str=="down"){
+        var heartDiv = document.getElementById("lives");
+        heartDiv.removeChild(heartDiv.lastChild);
+    }
+
+}
+
+function updateStarFishAlive(isAlive) {
+    client_starFish.isAlive=isAlive;
+}
+
+function clientCreateStarFish(starFish){
+    client_starFish = starFish;
+    client_starFish.img= "./img/starfish.png";
 }
 
 function clientDraw() {

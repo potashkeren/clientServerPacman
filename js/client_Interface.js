@@ -6,7 +6,7 @@ var _isGameOn=false;
 //add default _users
 _users["a"] = "a";
 _users["test2017"] = "test2017";
-var numOfGhosts, time,coins;
+var c_numOfGhosts, c_time,c_coins;
 function login() {
     var name = document.getElementById("logName").value;
     var pwd = document.getElementById("logPassword").value;
@@ -45,12 +45,14 @@ function playGame(){
         document.getElementById("errorTime").innerHTML = "Game time should be at least 60 seconds";
     }
     else{
-    numOfGhosts = $("#selectGhosts").val();
-    coins = $("#selectCoins").val();
-    $("#settings").hide();
-    $("#play").show();
-     $("#welcome_user").text("WELCOME" +"\u00A0" + _currentUser);
-    Start();
+        $("#settings").hide();
+        $("#play").show();
+
+        c_numOfGhosts = $("#selectGhosts").val();
+        c_coins = $("#selectCoins").val();
+        c_time = $("#selectTime").val();
+        $("#welcome_user").text("WELCOME" +"\u00A0" + _currentUser);
+        startGame(c_time,c_coins,c_numOfGhosts);
     }
 }
 /*#region Menu&Dialog*/

@@ -23,13 +23,16 @@ var starFish, _timeLeft;
 
 var _ghostMoveModolu = 0;
 var _eatenCoins;
-var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
+var coins;
+var time;
 
-var shape=new Object();
+
+var pacman=new Object();
 var _lastPressedKey;
 var _board;
 var score;
 var interval, _audio, _sound;
+var numOfGhosts;
 
 /* Human readable keyCode index */
 var NONE        = 4,
@@ -42,257 +45,73 @@ PAUSE       = 6,
 PLAYING     = 7,
 COUNTDOWN   = 8,
 EATEN_PAUSE = 9,
-DYING       = 10,
-Pacman      = {};
+DYING       = 10;
 
 var _pacman_remain;
 var contex = canvas.getContext("2d");
 
-function Start() {
+
+
+function Start(ctime,ccoins,cnumOfGhost) {
     _isGameOn = true;
     score = 0;
      _eatenCoins=0;
-    var cnt = 100;
-    time = $("#selectTime").val();
+    time = ctime;
+    numOfGhosts = cnumOfGhost;
+    coins = ccoins;
+    _ghostMeet = false;
+    _pacman_remain = 2;
+
     initBoard();
-
-    ///place the pacman in randome cell
-    var emptyCell = findRandomEmptyCell(_board);
-    _board[emptyCell[0]][emptyCell[1]] = 2;
-    shape.i = emptyCell[0];
-    shape.j = emptyCell[1];
-
+    createStarFish();
+    placePacmanInRandomCell();
     fillPoints();
     createGhosts();
 
     keysDown = {};
-    addEventListener("keydown", function (e) {
-        keysDown[e.keyCode] = true;
-    }, false);
-    addEventListener("keyup", function (e) {
-        keysDown[e.keyCode] = false;
-    }, false);
-     interval=setInterval(UpdatePosition, 90);
+    addEventListener("keydown", function (e) {keysDown[e.keyCode] = true;}, false);
+    addEventListener("keyup", function (e) {keysDown[e.keyCode] = false;}, false);
+    interval=setInterval(UpdatePosition, 90);
 
-     clientStart(time,_isGameOn)
-            }
-
-function initBoard(){
-    counter = setInterval(timer, 1000);
-
-    _ghostMeet = false;
-    _pacman_remain = 2;
-    _board = [
-                           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                         	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                         	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-                         	[1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
-                         	[1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-                         	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                         	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-                         	[1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-                         	[1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-                         	[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-                         	[1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-                         	[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-                         	[1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-                         	[1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-                         	[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-                         	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                         	[1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-                         	[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-                         	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-                         	[1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                         	[1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
-                         	[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-                         ];
-    starFish = {
-    x: 1,
-    y : 21,
-    prevX: 1,
-    prevY: 21,
-    boardX: 30 ,
-    boardY: 430,
-    img: "./img/starfish.png",
-    isAlive: true,
-  };
-}
-
-function moveStarfish(){
-    if(starFish.isAlive == true)
-    {
-        if( _ghostMoveModolu % 5 == 0){
-            var locations = getPossibleMoves(starFish.x,starFish.y);
-             if(locations.length == 1){
-                starFish.prevX = starFish.x;
-                starFish.prevY = starFish.y;
-                starFish.x =  locations[0].x;
-                starFish.y = locations[0].y;
-             }else{
-             var moved = false;
-             while(!moved){
-                var rnd = Math.floor((Math.random() * locations.length));
-                if((starFish.prevY != locations[rnd].y || starFish.prevX != locations[rnd].x )){
-                        starFish.prevX = starFish.x;
-                        starFish.prevY = starFish.y;
-                        starFish.x = locations[rnd].x;
-                        starFish.y = locations[rnd].y;
-                        moved = true;
-                     }
-                }
-              }
-        }
-        if(starFish.x == shape.i && starFish.y == shape.j){
-                checkPacmanStarMeet();
-        }
-     }
-}
-
-function fillPoints(){
-   //fill Points
-   var food_remain = coins;
-   var whitePoints = 0.6 * coins;
-   var pinkPoints = 0.3 * coins;
-   var orangePoints = coins - pinkPoints - whitePoints;
-
-   while(food_remain>0){
-        var emptyCell = findRandomEmptyCell(_board);
-        if(whitePoints > 0){
-            _board[emptyCell[0]][emptyCell[1]] = 3; // 3==white coin
-            whitePoints--;
-        } else if(pinkPoints>0){
-            _board[emptyCell[0]][emptyCell[1]] = 4;
-            pinkPoints--;
-        } else if(orangePoints >0){
-            _board[emptyCell[0]][emptyCell[1]] = 5;
-            orangePoints--;
-        }
-        food_remain--;
-   }
-   var emptyCell = findRandomEmptyCell(_board);
-    _board[emptyCell[0]][emptyCell[1]] = 8; // Extra Time
-   var emptyCell2 = findRandomEmptyCell(_board);
-   _board[emptyCell2[0]][emptyCell2[1]] = 6; // Extra Life
-}
-
-
-function moveGhosts(){
-    _ghostMoveModolu = _ghostMoveModolu + 1 ;
-
-        for (var i = 0; i < numOfGhosts; i++)
-        {
-            if( _ghostMoveModolu % 4 == i){
-                var g = ghosts[i];
-
-                var bestMove = getBestMoveForGhost(g);
-                g.prevX = g.x;
-                g.prevY = g.y;
-                g.x = bestMove.x;
-                g.y = bestMove.y;
-        }
     }
-    clientMoveGhost(ghosts);
-}
-
-function getRandomDirection(){
-    var i = Math.random();
-    if(i<0.25){
-        return "up";
-    }else if(i<0.5){
-        return "down";
-    }else if(i<0.75){
-        return "right";
-    }else{
-        return "left";
-    }
-}
-
-
-
-
-
-function keyDown(e) {
-if (typeof keyMap[e.keyCode] !== "undefined") {
-    due = keyMap[e.keyCode];
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-}
-return true;
-}
-
-function findRandomEmptyCell(_board){
-    var i = Math.floor((Math.random() * 22) + 1);
-    var j = Math.floor((Math.random() * 22) + 1);
-    while(_board[i][j]!=0)
-    {
-        i = Math.floor((Math.random() * 22) + 1);
-        j = Math.floor((Math.random() * 22) + 1);
-    }
-    return [i,j];
- }
-
-function GetKeyPressed() {
-    if (keysDown[38]) {
-        return 1;
-    }
-    if (keysDown[40]) {
-        return 2;
-    }
-    if (keysDown[37]) {
-        return 3;
-    }
-    if (keysDown[39]) {
-        return 4;
-    }
-}
 
 function UpdatePosition() {
-    $("#lblScore").text(score);
-    _board[shape.i][shape.j]=0;
+    updateScore(score);
+    _board[pacman.i][pacman.j]=0;
+    updateBoard(0,pacman.i,pacman.j);
     var x = GetKeyPressed()
-    if(x==1)
-    {
-        if(shape.j>1 && _board[shape.i][shape.j-1]!=1)
-        {
-            shape.j--;
+    if(x==1) {
+        if(pacman.j>1 && _board[pacman.i][pacman.j-1]!=1) {
+            pacman.j--;
             _lastPressedKey = "up";
         }
     }
-    if(x==2)
-    {
-        if(shape.j<22 && _board[shape.i][shape.j+1]!=1)
-        {
-            shape.j++;
+    if(x==2) {
+        if(pacman.j<22 && _board[pacman.i][pacman.j+1]!=1) {
+            pacman.j++;
             _lastPressedKey = "down";
         }
     }
-    if(x==3)
-    {
-        if(shape.i>1 && _board[shape.i-1][shape.j]!=1)
-        {
-            shape.i--;
+    if(x==3) {
+        if(pacman.i>1 && _board[pacman.i-1][pacman.j]!=1) {
+            pacman.i--;
             _lastPressedKey = "left";
         }
     }
-    if(x==4)
-    {
-        if(shape.i<22 && _board[shape.i+1][shape.j]!=1)
-        {
-            shape.i++;
+    if(x==4) {
+        if(pacman.i<22 && _board[pacman.i+1][pacman.j]!=1) {
+            pacman.i++;
             _lastPressedKey = "right";
         }
     }
     checkScores();
 
-    _board[shape.i][shape.j]=2;
-    if(_eatenCoins==coins)
-    {
+    _board[pacman.i][pacman.j]=2;
+    updateBoard(2,pacman.i,pacman.j);
+    if(_eatenCoins==coins) {
         gameOver("coins");
     }
-    else
-    {
+    else {
 
         checkPacmanGhostMeet();
         checkPacmanStarMeet();
@@ -303,50 +122,41 @@ function UpdatePosition() {
 }
 
 function checkScores(){
-    if(_board[shape.i][shape.j]==3)
-    {
+    if(_board[pacman.i][pacman.j]==3) {
        score = score+5;
        _eatenCoins++;
     }
-    else if(_board[shape.i][shape.j]==4)
-      {
-           score = score + 15;
-           _eatenCoins++;
-      }
-      else if(_board[shape.i][shape.j]==5)
-     {
-           score = score + 25;
-           _eatenCoins++;
-     }
-     else if(_board[shape.i][shape.j]==8){
-            time = time + 30;
-     }
-     else if(_board[shape.i][shape.j]==6){
-            _pacman_remain++; // add life
-            clientAddLife();
+    else if(_board[pacman.i][pacman.j]==4) {
+        score = score + 15;
+        _eatenCoins++;
+    }
+    else if(_board[pacman.i][pacman.j]==5) {
+        score = score + 25;
+        _eatenCoins++;
+    }
+    else if(_board[pacman.i][pacman.j]==8){
+        time = time + 30;
+    }
+    else if(_board[pacman.i][pacman.j]==6){
+        _pacman_remain++; // add life
+        updateLife("up");
     }
 }
 
-function checkPacmanStarMeet(){
-    if( starFish.isAlive == true && starFish.x == shape.i && starFish.y == shape.j){
-       score = score + 50;
-       starFish.isAlive = false;
-    }
-}
+// ------------ fixed ------------ //
 
 function checkPacmanGhostMeet(){
     for(var i=0; i<numOfGhosts; i++){
 
-    var ghost = ghosts[i];
-    if(ghost.x == shape.i && ghost.y == shape.j){
-        _ghostMeet = true;
+        var ghost = ghosts[i];
+        if(ghost.x == pacman.i && ghost.y == pacman.j){
+            _ghostMeet = true;
             if(_pacman_remain == 0){
                 gameOver("gameover");
             }
             else{
                 _pacman_remain--;
-                var heartDiv = document.getElementById("lives");
-                heartDiv.removeChild(heartDiv.lastChild);
+                updateLife("down");
                 pacmanStrike();
             }
         }
@@ -354,44 +164,22 @@ function checkPacmanGhostMeet(){
     ghostMeet = false;
 }
 
-function gameOver(reason){
-     window.clearInterval(interval);
-     window.clearInterval(counter);
-     _isGameOn = false;
-     clientGameOver(reason,false);
-}
-
 function meetGhost(){
-      var emptyCell = findRandomEmptyCell(_board);
-      _board[emptyCell[0]][emptyCell[1]] = 2;
-      shape.i = emptyCell[0];
-      shape.j = emptyCell[1];
-      DrawPacman();
-      createGhosts();
-      keysDown = {};
-      addEventListener("keydown", function (e) {
-          keysDown[e.keyCode] = true;
-      }, false);
-      addEventListener("keyup", function (e) {
-          keysDown[e.keyCode] = false;
-      }, false);
-       interval=setInterval(UpdatePosition, 80);
-       time = _timeLeft;
-       counter=setInterval(timer, 1000);
-       _ghostMeet = false;
+    placePacmanInRandomCell();
+    DrawPacman();
+    createGhosts();
+    keysDown = {};
+    addEventListener("keydown", function (e) {
+        keysDown[e.keyCode] = true;
+    }, false);
+    addEventListener("keyup", function (e) {
+        keysDown[e.keyCode] = false;
+    }, false);
+    interval=setInterval(UpdatePosition, 80);
+    time = _timeLeft;
+    counter=setInterval(timer, 1000);
+    _ghostMeet = false;
 }
-
-function pacmanStrike(){
-   window.clearInterval(interval);
-   window.clearInterval(counter);
-   _timeLeft = time;
-
-   var  livesLeft = _pacman_remain +1;
-    clientPacmanStrike(livesLeft);
-}
-
-
-// ------------ fixed ------------ //
 
 function timer(){
     time=time-1;
@@ -401,7 +189,7 @@ function timer(){
         gameOver("time is up");
         return;
     }
-    clientGetTime(time);
+    updateTime(time);
 }
 
 function getPossibleMoves( x,  y){
@@ -424,6 +212,17 @@ function getPossibleMoves( x,  y){
     return locations;
 }
 
+function findRandomEmptyCell(_board){
+    var i = Math.floor((Math.random() * 22) + 1);
+    var j = Math.floor((Math.random() * 22) + 1);
+    while(_board[i][j]!=0)
+    {
+        i = Math.floor((Math.random() * 22) + 1);
+        j = Math.floor((Math.random() * 22) + 1);
+    }
+    return [i,j];
+}
+
 function getBestMoveForGhost(ghost){
     var locations = getPossibleMoves(ghost.x, ghost.y);
     var lastMax = 1000000000000000000000000;
@@ -431,7 +230,7 @@ function getBestMoveForGhost(ghost){
     if(locations.length == 1) return {x: locations[0].x,y: locations[0].y};
     for(var i=0; i < 4; i++){
         if(locations[i] != null){
-            var manhaten = Math.sqrt(Math.pow(locations[i].x-shape.i,2)+ Math.pow(locations[i].y-shape.j,2));
+            var manhaten = Math.sqrt(Math.pow(locations[i].x-pacman.i,2)+ Math.pow(locations[i].y-pacman.j,2));
             if(manhaten < lastMax && (ghost.prevY != locations[i].y || ghost.prevX != locations[i].x )){
                 lastMax = manhaten;
                 result = {x: locations[i].x,y: locations[i].y};
@@ -453,8 +252,193 @@ function createGhosts(){
             startingX : canvasCorners[i].x,
             startingY : canvasCorners[i].y};
 
-        ghost.imagePath = ghostsPictures[i];
         ghosts.push(ghost);
     }
-    clientGetGhost(ghosts,numOfGhosts);
+    clientGetGhost(ghosts);
+}
+
+function pacmanStrike(){
+    window.clearInterval(interval);
+    window.clearInterval(counter);
+    _timeLeft = time;
+
+    var  livesLeft = _pacman_remain +1;
+    clientPacmanStrike(livesLeft);
+}
+
+function gameOver(reason){
+    window.clearInterval(interval);
+    window.clearInterval(counter);
+    _isGameOn = false;
+    clientGameOver(reason,false);
+}
+
+function fillPoints(){
+    //fill Points
+    var food_remain = coins;
+    var whitePoints = 0.6 * coins;
+    var pinkPoints = 0.3 * coins;
+    var orangePoints = coins - pinkPoints - whitePoints;
+
+    while(food_remain>0){
+        var emptyCell = findRandomEmptyCell(_board);
+        if(whitePoints > 0){
+            _board[emptyCell[0]][emptyCell[1]] = 3; // 3==white coin
+            updateBoard(3,emptyCell[0],emptyCell[1]);
+            whitePoints--;
+        } else if(pinkPoints>0){
+            _board[emptyCell[0]][emptyCell[1]] = 4;
+            updateBoard(4,emptyCell[0],emptyCell[1]);
+            pinkPoints--;
+        } else if(orangePoints >0){
+            _board[emptyCell[0]][emptyCell[1]] = 5;
+            updateBoard(5,emptyCell[0],emptyCell[1]);
+            orangePoints--;
+        }
+        food_remain--;
+    }
+    var emptyCell = findRandomEmptyCell(_board);
+    _board[emptyCell[0]][emptyCell[1]] = 8; // Extra
+    updateBoard(8,emptyCell[0],emptyCell[1]);
+    var emptyCell2 = findRandomEmptyCell(_board);
+    _board[emptyCell2[0]][emptyCell2[1]] = 6; // Extra Life
+    updateBoard(6,emptyCell2[0],emptyCell2[1]);
+}
+
+function GetKeyPressed() {
+    if (keysDown[38]) {return 1;}
+    if (keysDown[40]) {return 2;}
+    if (keysDown[37]) {return 3;}
+    if (keysDown[39]) {return 4;}
+}
+
+function getRandomDirection(){
+    var i = Math.random();
+    if(i<0.25){
+        return "up";
+    }else if(i<0.5){
+        return "down";
+    }else if(i<0.75){
+        return "right";
+    }else{
+        return "left";
+    }
+}
+
+function placePacmanInRandomCell() {
+    var emptyCell = findRandomEmptyCell(_board);
+    _board[emptyCell[0]][emptyCell[1]] = 2;
+    pacman.i = emptyCell[0];
+    pacman.j = emptyCell[1];
+}
+
+function keyDown(e) {
+    if (typeof keyMap[e.keyCode] !== "undefined") {
+        due = keyMap[e.keyCode];
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+    return true;
+}
+
+function initBoard(){
+    counter = setInterval(timer, 1000);
+    _board = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ];
+    clientCreateBoard(_board);
+
+}
+
+function createStarFish() {
+    starFish = {
+        x: 1,
+        y: 21,
+        prevX: 1,
+        prevY: 21,
+        boardX: 30,
+        boardY: 430,
+        isAlive: true,
+    };
+    clientCreateStarFish(starFish)
+}
+
+function checkPacmanStarMeet(){
+    if( starFish.isAlive == true && starFish.x == pacman.i && starFish.y == pacman.j){
+        score = score + 50;
+        starFish.isAlive = false;
+        updateStarFishAlive(false);
+    }
+}
+
+function moveStarfish(){
+    if(starFish.isAlive == true) {
+        if( _ghostMoveModolu % 5 == 0){
+            var locations = getPossibleMoves(starFish.x,starFish.y);
+            if(locations.length == 1){
+                starFish.prevX = starFish.x;
+                starFish.prevY = starFish.y;
+                starFish.x =  locations[0].x;
+                starFish.y = locations[0].y;
+                updateStarFish(starFish.x,starFish.y);
+            }else{
+                var moved = false;
+                while(!moved){
+                    var rnd = Math.floor((Math.random() * locations.length));
+                    if((starFish.prevY != locations[rnd].y || starFish.prevX != locations[rnd].x )){
+                        starFish.prevX = starFish.x;
+                        starFish.prevY = starFish.y;
+                        starFish.x = locations[rnd].x;
+                        starFish.y = locations[rnd].y;
+                        moved = true;
+                        updateStarFish(starFish.x,starFish.y);
+                    }
+                }
+            }
+        }
+        if(starFish.x == pacman.i && starFish.y == pacman.j){
+            checkPacmanStarMeet();
+        }
+    }
+}
+
+function moveGhosts(){
+    _ghostMoveModolu = _ghostMoveModolu + 1 ;
+
+    for (var i = 0; i < numOfGhosts; i++)
+    {
+        if( _ghostMoveModolu % 4 == i){
+            var g = ghosts[i];
+
+            var bestMove = getBestMoveForGhost(g);
+            g.prevX = g.x;
+            g.prevY = g.y;
+            g.x = bestMove.x;
+            g.y = bestMove.y;
+            updateGhostLocation(i,g.x,g.y);
+        }
+    }
 }
