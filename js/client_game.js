@@ -33,6 +33,7 @@ var client_score;
 var client_eatenCoins;
 var client_isGameOn;
 var client_time;
+var client_startTime;
 var client_ghosts;
 var client_numOfGhosts;
 var client_starFish;
@@ -40,9 +41,9 @@ var client_lastPressedKey;
 var ghostsPictures =["./img/pinki.ico", "./img/redi.png", "./img/blui.ico"];
 var client_pacman = new Object();
 var _audio, _sound;
+var client_coins;
 var contex = canvas.getContext("2d");
 //endregion
-
 
 
 function client_get_message(json){
@@ -52,8 +53,50 @@ function client_get_message(json){
         case "clientCreateBoard":
             clientCreateBoard(param.board);
             break;
-        case "user_pressed_the_start_game_button":
-            Start();
+        case "getStarFish":
+            getStarFish(param.starFish);
+            break;
+        case "updatePacmanLocation":
+            updatePacmanLocation(param.pacman_i,param.pacman_j,param.lastPressKey);
+            break;
+        case "updateBoard":
+            updateBoard(param.board_number,param.board_x,param.board_y);
+            break;
+        case "getGhost":
+            getGhost(param.ghost_number,param.ghost);
+            break;
+        case "updateScore":
+            updateScore(param.score);
+            break;
+        case "updatePacmanLocation":
+            updatePacmanLocation(param.pacman_x,param.pacman_y,param.move);
+            break;
+        case "updateLife":
+            updateLife(param.life);
+            break;
+        case "clientGameOver":
+            clientGameOver(param.reason, param.isGameOn);
+            break;
+        case "clientPacmanStrike":
+            clientPacmanStrike(param.livesLeft);
+            break;
+        case "updateTime":
+            updateTime(param.time);
+            break;
+        case "updateStarFishAlive":
+            updateStarFishAlive(param.starFishLive);
+            break;
+        case "updateGhostLocation":
+            updateGhostLocation(param.ghost_number , param.ghost_x, param.ghost_y);
+            break;
+        case "updateStarFishLocation":
+            updateStarFishLocation(param.starFish_x,param.starFish_y);
+            break;
+        case "Draw":
+            Draw();
+            break;
+        case "DrawPacman":
+            DrawPacman();
             break;
     }
 
@@ -75,14 +118,16 @@ function BuildJson(functionName,param, isObject) {
     return msg;
 }
 
-
 //region ** Flow Functionality **
 function startGame(time,coins,numOfGhost) {
     client_numOfGhosts = numOfGhost;
+    client_ghosts = new Array(client_numOfGhosts);
     client_isGameOn = true;
     client_score = 0;
     client_eatenCoins=0;
     client_time=time;
+    client_startTime = time;
+    client_coins = coins;
     clientInitSoundAndLife();
 
     keysDown = {};
@@ -90,9 +135,7 @@ function startGame(time,coins,numOfGhost) {
     addEventListener("keyup", function (e) {keysDown[e.keyCode] = false;}, false);
 
     var parameters = '"client_time" :' +time + ', "coins" :' + coins + ', "numOfGhosts" :' + client_numOfGhosts;
-    //var exm = '{ "name":"John", "age":31, "city":"New York" }';
     client_send_message(BuildJson("Start",parameters,false));
-    //Start(client_time,coins,client_numOfGhosts);
 }
 
 function GetKeyPressed() {
@@ -116,7 +159,7 @@ function clientMeetGhost() {
     _audio.play();
     document.getElementById("Strike").close();
 
-    meetGhost();
+    client_send_message(BuildJson("meetGhost",""));
 }
 
 function clientGameOver(reason,isGameOn){
@@ -138,6 +181,10 @@ function clientGameOver(reason,isGameOn){
             _sound = new Audio('./data/win.mp3');
         }
     }
+    else{
+        $("#dialogText").text("You can do better. \n Your score is: "+ score);
+        _sound = new Audio('./data/gameOver.mp3');
+    }
     _sound.play();
     document.getElementById("Game Over").showModal();
     //remove heartes from the hearts div
@@ -148,12 +195,14 @@ function clientGameOver(reason,isGameOn){
 }
 
 function reStart(){
-    gameOver("");
-    Start();
+    var parameters = '"reason" : "reStart" ' ;
+    client_send_message(BuildJson("gameOver",parameters,false));
+    startGame(client_startTime,client_coins,client_numOfGhosts);
 }
 
 function backToSettings(){
-    gameOver("");
+    var parameters = '"reason" : "BackToSetting" ' ;
+    client_send_message(BuildJson("gameOver",parameters,false));
     $("#settings").show();
     $("#play").hide();
 }
@@ -198,11 +247,9 @@ function getStarFish(starFish){
     client_starFish.img= "./img/starfish.png";
 }
 
-function getGhost(ghost){
-    client_ghosts = ghost;
-    for (var i = 0; i < client_numOfGhosts; i++){
-        client_ghosts[i].imagePath = ghostsPictures[i];
-    }
+function getGhost(number,ghost){
+    client_ghosts[number] = ghost;
+    client_ghosts[number].imagePath = ghostsPictures[number];
 }
 //endregion
 
@@ -238,9 +285,7 @@ function updateLife(life) {
 }
 
 function updatePacmanLocation(x,y,lastPressKey) {
-    if (lastPressKey!=""){
-        client_lastPressedKey = lastPressKey;
-    }
+    if (lastPressKey!=""){client_lastPressedKey = lastPressKey;}
     client_pacman.i = x;
     client_pacman.j = y;
 }

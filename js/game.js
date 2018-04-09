@@ -21,8 +21,11 @@ function get_message(json){
         case "Start":
             Start(param.client_time,param.coins,param.numOfGhosts);
             break;
-        case "user_pressed_the_start_game_button":
-            Start();
+        case "meetGhost":
+            meetGhost();
+            break;
+        case "gameOver":
+            gameOver(param.reason);
             break;
     }
 }
@@ -57,46 +60,57 @@ function Start(ctime,ccoins,cnumOfGhost) {
     fillPoints();
     createGhosts();
 
-    // keysDown = {};
-    // addEventListener("keydown", function (e) {keysDown[e.keyCode] = true;}, false);
-    // addEventListener("keyup", function (e) {keysDown[e.keyCode] = false;}, false);
     interval=setInterval(UpdatePosition, 90);
-
     }
 
 function UpdatePosition() {
-    updateScore(score);
+
+    //update score
+    var jsonScore = '"score" :' +score ;
+    send_message(ServerBuildJson("updateScore",jsonScore));
+
+    //update where the pacman was with empty cell
     _board[pacman.i][pacman.j]=0;
-    updateBoard(0,pacman.i,pacman.j);
+    var jsonBoard = '"board_number" :' + 0 + ', "board_x" :' + pacman.i + ', "board_y" :' + pacman.j;
+    send_message(ServerBuildJson("updateBoard",jsonBoard));
+
+    //move pacman
     var x = GetKeyPressed();
     if(x==1) {
         if(pacman.j>1 && _board[pacman.i][pacman.j-1]!=1) {
             pacman.j--;
-            updatePacmanLocation(pacman.i,pacman.j,"up");
+            var param = '"pacman_i" :' +pacman.i + ', "pacman_j" :' + pacman.j + ', "lastPressKey" :' + '"up"';
+            send_message(ServerBuildJson("updatePacmanLocation",param));
         }
     }
     if(x==2) {
         if(pacman.j<22 && _board[pacman.i][pacman.j+1]!=1) {
             pacman.j++;
-            updatePacmanLocation(pacman.i,pacman.j,"down");
+            var param = '"pacman_i" :' +pacman.i + ', "pacman_j" :' + pacman.j + ', "lastPressKey" :' + '"down"';
+            send_message(ServerBuildJson("updatePacmanLocation",param));
         }
     }
     if(x==3) {
         if(pacman.i>1 && _board[pacman.i-1][pacman.j]!=1) {
             pacman.i--;
-            updatePacmanLocation(pacman.i,pacman.j,"left");
+            var param = '"pacman_i" :' +pacman.i + ', "pacman_j" :' + pacman.j + ', "lastPressKey" :' + '"left"';
+            send_message(ServerBuildJson("updatePacmanLocation",param));
         }
     }
     if(x==4) {
         if(pacman.i<22 && _board[pacman.i+1][pacman.j]!=1) {
             pacman.i++;
-            updatePacmanLocation(pacman.i,pacman.j,"right");
+            var param = '"pacman_i" :' +pacman.i + ', "pacman_j" :' + pacman.j + ', "lastPressKey" :' + '"right"';
+            send_message(ServerBuildJson("updatePacmanLocation",param));
         }
     }
 
     checkScores();
+
+    //update the new pacman position
     _board[pacman.i][pacman.j]=2;
-    updateBoard(2,pacman.i,pacman.j);
+    var jsonBoard = '"board_number" :' + 2 + ', "board_x" :' + pacman.i + ', "board_y" :' + pacman.j;
+    send_message(ServerBuildJson("updateBoard",jsonBoard));
 
     if(_eatenCoins==coins) {
         gameOver("coins");
@@ -106,7 +120,7 @@ function UpdatePosition() {
         checkPacmanStarMeet();
         moveGhosts();
         moveStarfish();
-        Draw()
+        send_message(ServerBuildJson("Draw",""));
      }
 }
 
@@ -128,7 +142,8 @@ function checkScores(){
     }
     else if(_board[pacman.i][pacman.j]===6){
         _pacman_remain++; // add life
-        updateLife("up");
+        var param = '"life" : "up"' ;
+        send_message(ServerBuildJson("updateLife",param));
     }
 }
 
@@ -140,14 +155,17 @@ function timer(){
         gameOver("time is up");
         return;
     }
-    updateTime(time);
+    var param = '"time" :' +time ;
+    send_message(ServerBuildJson("updateTime",param));
 }
 
 function gameOver(reason){
     window.clearInterval(interval);
     window.clearInterval(counter);
     _isGameOn = false;
-    clientGameOver(reason,false);
+
+    var param = '"reason" : "' + reason + '" , "isGameOn" :' + _isGameOn ;
+    send_message(ServerBuildJson("clientGameOver",param));
 }
 //endregion
 
@@ -182,8 +200,6 @@ function initBoard(){
 
     var param = '"board" :' + JSON.stringify(_board);
     send_message(ServerBuildJson("clientCreateBoard",param));
-    //clientCreateBoard(_board);
-
 }
 
 function fillPoints(){
@@ -192,30 +208,42 @@ function fillPoints(){
     var whitePoints = 0.6 * coins;
     var pinkPoints = 0.3 * coins;
     var orangePoints = coins - pinkPoints - whitePoints;
+    var param;
 
     while(food_remain>0){
         var emptyCell = findRandomEmptyCell(_board);
         if(whitePoints > 0){
             _board[emptyCell[0]][emptyCell[1]] = 3; // 3==white coin
-            updateBoard(3,emptyCell[0],emptyCell[1]);
             whitePoints--;
+
+            param = '"board_number" :' + 3 + ', "board_x" :' + emptyCell[0] + ', "board_y" :' + emptyCell[1];
+            send_message(ServerBuildJson("updateBoard",param));
         } else if(pinkPoints>0){
             _board[emptyCell[0]][emptyCell[1]] = 4;
-            updateBoard(4,emptyCell[0],emptyCell[1]);
             pinkPoints--;
+
+            param = '"board_number" :' + 4 + ', "board_x" :' + emptyCell[0] + ', "board_y" :' + emptyCell[1];
+            send_message(ServerBuildJson("updateBoard",param));
         } else if(orangePoints >0){
             _board[emptyCell[0]][emptyCell[1]] = 5;
-            updateBoard(5,emptyCell[0],emptyCell[1]);
             orangePoints--;
+
+            param = '"board_number" :' + 5 + ', "board_x" :' + emptyCell[0] + ', "board_y" :' + emptyCell[1];
+            send_message(ServerBuildJson("updateBoard",param));
         }
         food_remain--;
     }
+    //Extra Time
     var emptyCell = findRandomEmptyCell(_board);
     _board[emptyCell[0]][emptyCell[1]] = 8; // Extra
-    updateBoard(8,emptyCell[0],emptyCell[1]);
+    param = '"board_number" :' + 8 + ', "board_x" :' + emptyCell[0] + ', "board_y" :' + emptyCell[1];
+    send_message(ServerBuildJson("updateBoard",param));
+
+    //Extra Life
     var emptyCell2 = findRandomEmptyCell(_board);
     _board[emptyCell2[0]][emptyCell2[1]] = 6; // Extra Life
-    updateBoard(6,emptyCell2[0],emptyCell2[1]);
+    param = '"board_number" :' + 6 + ', "board_x" :' + emptyCell2[0] + ', "board_y" :' + emptyCell2[1];
+    send_message(ServerBuildJson("updateBoard",param));
 }
 //endregion
 
@@ -227,7 +255,9 @@ function placePacmanInRandomCell() {
     _board[emptyCell[0]][emptyCell[1]] = 2;
     pacman.i = emptyCell[0];
     pacman.j = emptyCell[1];
-    updatePacmanLocation(pacman.i,pacman.j,"");
+
+    var param = '"pacman_i" :' +pacman.i + ', "pacman_j" :' + pacman.j + ', "lastPressKey" :' + '""';
+    send_message(ServerBuildJson("updatePacmanLocation",param));
 }
 
 function getPossibleMoves( x,  y){
@@ -267,7 +297,8 @@ function pacmanStrike(){
     _timeLeft = time;
 
     var  livesLeft = _pacman_remain +1;
-    clientPacmanStrike(livesLeft);
+    var param = '"livesLeft" :' + livesLeft ;
+    send_message(ServerBuildJson("clientPacmanStrike",param));
 }
 
 function getRandomDirection(){
@@ -305,14 +336,18 @@ function createStarFish() {
         boardY: 430,
         isAlive: true,
     };
-    getStarFish(starFish)
+    var param = '"starFish" :' + JSON.stringify(starFish);
+    send_message(ServerBuildJson("getStarFish",param));
+
 }
 
 function checkPacmanStarMeet(){
     if( starFish.isAlive == true && starFish.x == pacman.i && starFish.y == pacman.j){
         score = score + 50;
         starFish.isAlive = false;
-        updateStarFishAlive(false);
+
+        var param = '"StarFishLive" :' + false ;
+        send_message(ServerBuildJson("updateStarFishAlive",param));
     }
 }
 
@@ -325,7 +360,9 @@ function moveStarfish(){
                 starFish.prevY = starFish.y;
                 starFish.x =  locations[0].x;
                 starFish.y = locations[0].y;
-                updateStarFishLocation(starFish.x,starFish.y);
+
+                var param = '"starFish_x" :' + starFish.x + ', "starFish_y" :' + starFish.y ;
+                send_message(ServerBuildJson("updateStarFishLocation",param));
             }else{
                 var moved = false;
                 while(!moved){
@@ -336,7 +373,9 @@ function moveStarfish(){
                         starFish.x = locations[rnd].x;
                         starFish.y = locations[rnd].y;
                         moved = true;
-                        updateStarFishLocation(starFish.x,starFish.y);
+
+                        var param = '"starFish_x" :' + starFish.x + ', "starFish_y" :' + starFish.y ;
+                        send_message(ServerBuildJson("updateStarFishLocation",param));
                     }
                 }
             }
@@ -362,8 +401,9 @@ function createGhosts(){
             startingY : canvasCorners[i].y};
 
         ghosts.push(ghost);
+        var param = '"ghost_number" :' +i + ', "ghost" :' + JSON.stringify(ghost);
+        send_message(ServerBuildJson("getGhost",param));
     }
-    getGhost(ghosts);
 }
 
 function moveGhosts(){
@@ -379,7 +419,8 @@ function moveGhosts(){
             g.prevY = g.y;
             g.x = bestMove.x;
             g.y = bestMove.y;
-            updateGhostLocation(i,g.x,g.y);
+            var jsonBoard = '"ghost_number" :' + i + ', "ghost_x" :' + g.x + ', "ghost_y" :' + g.y;
+            send_message(ServerBuildJson("updateGhostLocation",jsonBoard));
         }
     }
 }
@@ -412,7 +453,9 @@ function checkPacmanGhostMeet(){
             }
             else{
                 _pacman_remain--;
-                updateLife("down");
+
+                var param = '"life" : "down"' ;
+                send_message(ServerBuildJson("updateLife",param));
                 pacmanStrike();
             }
         }
@@ -422,7 +465,8 @@ function checkPacmanGhostMeet(){
 
 function meetGhost(){
     placePacmanInRandomCell();
-    DrawPacman();
+    send_message(ServerBuildJson("DrawPacman",""));
+    //DrawPacman();
     createGhosts();
     keysDown = {};
     addEventListener("keydown", function (e) {
