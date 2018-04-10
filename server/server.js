@@ -1,4 +1,3 @@
-
 //region ** Game Variables **
 var boardCorners = [{x : 1, y : 1} , { x : 21, y : 1 }, { x : 21, y : 21 }];
 var canvasCorners = [{x : 30, y : 30} , { x : 430, y : 30 }, { x : 430, y : 430 }];
@@ -11,11 +10,66 @@ var time,_timeLeft, score;
 var counter, _ghostMeet;
 var _board,interval;
 var numOfGhosts, _pacman_remain;
+var KEY = {'BACKSPACE': 8, 'TAB': 9, 'NUM_PAD_CLEAR': 12, 'ENTER': 13, 'SHIFT': 16, 'CTRL': 17, 'ALT': 18, 'PAUSE': 19, 'CAPS_LOCK': 20, 'ESCAPE': 27, 'SPACEBAR': 32, 'PAGE_UP': 33, 'PAGE_DOWN': 34, 'END': 35, 'HOME': 36, 'ARROW_LEFT': 37, 'ARROW_UP': 38, 'ARROW_RIGHT': 39, 'ARROW_DOWN': 40, 'PRINT_SCREEN': 44, 'INSERT': 45, 'DELETE': 46, 'SEMICOLON': 59, 'WINDOWS_LEFT': 91, 'WINDOWS_RIGHT': 92, 'SELECT': 93, 'NUM_PAD_ASTERISK': 106, 'NUM_PAD_PLUS_SIGN': 107, 'NUM_PAD_HYPHEN-MINUS': 109, 'NUM_PAD_FULL_STOP': 110, 'NUM_PAD_SOLIDUS': 111, 'NUM_LOCK': 144, 'SCROLL_LOCK': 145, 'SEMICOLON': 186, 'EQUALS_SIGN': 187, 'COMMA': 188, 'HYPHEN-MINUS': 189, 'FULL_STOP': 190, 'SOLIDUS': 191, 'GRAVE_ACCENT': 192, 'LEFT_SQUARE_BRACKET': 219, 'REVERSE_SOLIDUS': 220, 'RIGHT_SQUARE_BRACKET': 221, 'APOSTROPHE': 222};
+
+var position  = null,
+    due       = null,
+    keyMap    = {};
+
+keyMap[KEY.ARROW_LEFT]  = LEFT;
+keyMap[KEY.ARROW_UP]    = UP;
+keyMap[KEY.ARROW_RIGHT] = RIGHT;
+keyMap[KEY.ARROW_DOWN]  = DOWN;
+
+/* Human readable keyCode index */
+var NONE        = 4,
+    UP          = 3,
+    LEFT        = 2,
+    DOWN        = 1,
+    RIGHT       = 11,
+    WAITING     = 5,
+    PAUSE       = 6,
+    PLAYING     = 7,
+    COUNTDOWN   = 8,
+    EATEN_PAUSE = 9,
+    DYING       = 10;
 //endregion
+
+var express = require('express');
+var ws = require('ws')
+
+var app = express();
+var bodyParser = require('body-parser');
+app.use(express.static((__dirname + '/../client')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
+
+var port = 4000;
+app.get('/', function (req, res) {
+    console.log('get completed');
+    res.sendfile('index.html');
+    //get_message(req);
+});
+app.listen(port, function () {
+    console.log('listening to port: ' + port);
+});
+
+var WebSocketServer = require('ws').Server,
+    wss = new WebSocketServer({port: 40510})
+wss.on('connection', function (ws) {
+    ws.on('message', function (message) {
+        get_message(message);
+    });
+    /*setInterval(
+        () => ws.send(`${new Date()}`),
+        1000
+    );*/
+});
 
 
 function get_message(json){
-     msg =JSON.parse(json);
+    msg =JSON.parse(json);
     var param = msg.parameters
     switch (msg.messageType) {
         case "Start":
@@ -27,11 +81,26 @@ function get_message(json){
         case "gameOver":
             gameOver(param.reason);
             break;
+        case "keydown":
+            keysDown[param.keycode] = true;
+            break;
+        case "keyup":
+            keysDown[param.keycode] = false;
+            break;
     }
 }
 
 function send_message(json){
-    client_get_message(json);
+    wss.clients.forEach(function each(ws) {
+        ws.send(json);
+    });
+}
+
+function GetKeyPressed() {
+    if (keysDown[38]) {return 1;}
+    if (keysDown[40]) {return 2;}
+    if (keysDown[37]) {return 3;}
+    if (keysDown[39]) {return 4;}
 }
 
 function ServerBuildJson(functionName,param) {
@@ -53,6 +122,7 @@ function Start(ctime,ccoins,cnumOfGhost) {
     coins = ccoins;
     _ghostMeet = false;
     _pacman_remain = 2;
+    keysDown = {};
 
     initBoard();
     createStarFish();
@@ -160,8 +230,8 @@ function timer(){
 }
 
 function gameOver(reason){
-    window.clearInterval(interval);
-    window.clearInterval(counter);
+    clearInterval(interval);
+    clearInterval(counter);
     _isGameOn = false;
 
     var param = '"reason" : "' + reason + '" , "isGameOn" :' + _isGameOn ;
@@ -292,8 +362,8 @@ function findRandomEmptyCell(_board){
 }
 
 function pacmanStrike(){
-    window.clearInterval(interval);
-    window.clearInterval(counter);
+    clearInterval(interval);
+    clearInterval(counter);
     _timeLeft = time;
 
     var  livesLeft = _pacman_remain +1;
@@ -466,15 +536,10 @@ function checkPacmanGhostMeet(){
 function meetGhost(){
     placePacmanInRandomCell();
     send_message(ServerBuildJson("DrawPacman",""));
-    //DrawPacman();
     createGhosts();
     keysDown = {};
-    addEventListener("keydown", function (e) {
-        keysDown[e.keyCode] = true;
-    }, false);
-    addEventListener("keyup", function (e) {
-        keysDown[e.keyCode] = false;
-    }, false);
+    send_message(ServerBuildJson("InitKeysMap",""));
+
     interval=setInterval(UpdatePosition, 80);
     time = _timeLeft;
     counter=setInterval(timer, 1000);

@@ -1,4 +1,4 @@
-$.getScript("js/game.js",function () {});
+//$.getScript("js/server.js",function () {});
 
 //region ** Help Variables **
 /* Human readable keyCode index */
@@ -44,7 +44,19 @@ var _audio, _sound;
 var client_coins;
 var contex = canvas.getContext("2d");
 //endregion
+var ws = new WebSocket('ws://localhost:40510');
 
+// event emmited when connected
+ws.onopen = function () {
+    console.log('websocket is connected ...')
+    // sending a send event to websocket server
+    //ws.send('connected')
+};
+
+// event emmited when receiving message
+ws.onmessage = function (ev) {
+    client_get_message(ev.data);
+};
 
 function client_get_message(json){
     var msg = JSON.parse(json);
@@ -98,12 +110,16 @@ function client_get_message(json){
         case "DrawPacman":
             DrawPacman();
             break;
+        case "InitKeysMap":
+            InitKeysMap();
+            break;
     }
 
 }
 
 function client_send_message(json){
-    get_message(json);
+//
+    ws.send(json);
 }
 
 function BuildJson(functionName,param, isObject) {
@@ -118,6 +134,18 @@ function BuildJson(functionName,param, isObject) {
     return msg;
 }
 
+function InitKeysMap() {
+    keysDown = {};
+    addEventListener("keydown", function (e) {
+        keysDown[e.keyCode] = true;
+        client_send_message(BuildJson("keydown", '"keycode" :' + e.keyCode, false));
+    }, false);
+    addEventListener("keyup", function (e) {
+        keysDown[e.keyCode] = false;
+        client_send_message(BuildJson("keyup", '"keycode" :' + e.keyCode, false));
+    }, false);
+}
+
 //region ** Flow Functionality **
 function startGame(time,coins,numOfGhost) {
     client_numOfGhosts = numOfGhost;
@@ -129,10 +157,7 @@ function startGame(time,coins,numOfGhost) {
     client_startTime = time;
     client_coins = coins;
     clientInitSoundAndLife();
-
-    keysDown = {};
-    addEventListener("keydown", function (e) {keysDown[e.keyCode] = true;}, false);
-    addEventListener("keyup", function (e) {keysDown[e.keyCode] = false;}, false);
+    InitKeysMap();
 
     var parameters = '"client_time" :' +time + ', "coins" :' + coins + ', "numOfGhosts" :' + client_numOfGhosts;
     client_send_message(BuildJson("Start",parameters,false));
@@ -165,24 +190,24 @@ function clientMeetGhost() {
 function clientGameOver(reason,isGameOn){
     client_isGameOn =isGameOn;
     _audio.pause();
-    if(reason == "coins"){
-        $("#dialogText").text("You Won! \n Your score is: " + score);
+    if(reason === "coins"){
+        $("#dialogText").text("You Won! \n Your score is: " + client_score);
         _sound = new Audio('./data/win.mp3');
-    } else if(reason == "gameover"){
-        $("#dialogText").text("You Lost! \n Your score is: " + score);
+    } else if(reason === "gameover"){
+        $("#dialogText").text("You Lost! \n Your score is: " + client_score);
         _sound = new Audio('./data/gameOver.mp3');
-    } else if (reason == ("time is up")){
-        if(score < 150){
-            $("#dialogText").text("You can do better. \n Your score is: "+ score);
+    } else if (reason === ("time is up")){
+        if(client_score < 150){
+            $("#dialogText").text("You can do better. \n Your score is: "+ client_score);
             _sound = new Audio('./data/gameOver.mp3');
         }
         else{
-            $("#dialogText").text("We have a winner. \n Your score is: "+ score);
+            $("#dialogText").text("We have a winner. \n Your score is: "+ client_score);
             _sound = new Audio('./data/win.mp3');
         }
     }
     else{
-        $("#dialogText").text("You can do better. \n Your score is: "+ score);
+        $("#dialogText").text("You can do better. \n Your score is: "+ client_score);
         _sound = new Audio('./data/gameOver.mp3');
     }
     _sound.play();
